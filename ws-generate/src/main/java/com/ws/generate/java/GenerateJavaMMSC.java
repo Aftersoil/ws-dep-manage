@@ -84,7 +84,10 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
                     Class<?> clazz = Class.forName(item.getType());
                     fieldSpec = GenerateJavaUtil.generateFieldBuilder(TypeName.get(clazz), item.getName(), Modifier.PRIVATE);
                     AnnotationSpec.Builder columnAnnotation = GenerateJavaUtil.generateAnnotationBuilder(Column.class);
+                    columnAnnotation.addMember("title", "$S", item.getTitle());
+                    columnAnnotation.addMember("comment", "$S", item.getComment());
                     columnAnnotation.addMember("conditions", "$T.all", Condition.class);
+                    columnAnnotation.addMember("primary", "$L", item.isPrimaryField());
                     fieldSpec.addAnnotation(columnAnnotation.build());
                 } catch (ClassNotFoundException e) {
                     this.printError(StringUtil.concat("加载类: ", item.getType(), " 失败"));
