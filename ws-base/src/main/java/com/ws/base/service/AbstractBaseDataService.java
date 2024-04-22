@@ -201,15 +201,6 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
             log.error("删除操作参数不能为空!如场景需要,建议单独写一个方法(也可重写该验证方法,但不建议!)");
             throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
         }
-        Field modelPrimaryField = this.getModelPrimaryField();
-        if (Objects.isNull(modelPrimaryField)) {
-            log.error("实体类需要指定主键字段");
-            throw new IException(CommonErrorInfo.SERVER_ERROR);
-        }
-        if (StringUtil.isEmpty(map.get(modelPrimaryField.getName()))) {
-            log.error("删除操作主键字段不能为空!如场景需要,建议单独写一个方法(也可重写该验证方法,但不建议!)");
-            throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
-        }
         return map;
     }
 

@@ -32,8 +32,8 @@ import java.util.function.Consumer;
 public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInfo<?, T>> implements GenerateInfo {
 
     private T model;
-    private Consumer<MessageException> message;
     private Document mapperDocument;
+    private Consumer<MessageException> message;
 
     public GenerateXml(@NotNull T model) {
         this.model = model;
@@ -231,7 +231,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         if (StrUtil.equals(this.getModel().getModelName(), rightModel.getModelName())) {
             return rightModel.getTableName();
         }
-//        rightTable不是当前类,查找当前类中字段的类型和rightTable相同的字段
+//        rightTable不是当前类,查找当前类中关联字段的关联类型和rightTable相同的字段
         List<F> list = this.getModel().getClazzJoinFields().stream().filter(item -> StrUtil.equals(item.getLeftModel().getModelName(), rightModel.getModelName())).toList();
         if (list.isEmpty()) {
             list = this.getModel().getCollectionJoinFields().stream().filter(item -> StrUtil.equals(item.getLeftModel().getModelName(), item.getLeftModel().getModelFullName())).toList();
@@ -364,7 +364,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
     public void getIfText(org.dom4j.Element ifElement, boolean isAndStr, String table, String columnName, Condition condition, String testConditionName) {
         String ifText = null;
         if (List.of(Condition.equal, Condition.orEqual, Condition.less, Condition.orLess, Condition.great, Condition.orGreat).contains(condition)) {
-            ifText = this.getNormalIfText(table, columnName, this.getConditionSeparator(condition), testConditionName, isAndStr);
+            ifText = this.getNormalIfText(table, columnName, this.getConditionStr(condition), testConditionName, isAndStr);
         } else if (List.of(Condition.like, Condition.orLike).contains(condition)) {
             ifText = this.getLikeIfText(table, columnName, testConditionName, isAndStr);
         } else if (List.of(Condition.in, Condition.orIn).contains(condition)) {
@@ -474,7 +474,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         return forEachElement;
     }
 
-    public String getConditionSeparator(@NotNull Condition condition) {
+    public String getConditionStr(@NotNull Condition condition) {
         if (condition.equals(Condition.equal) || condition.equals(Condition.orEqual)) {
             return " = ";
         } else if (condition.equals(Condition.less) || condition.equals(Condition.orLess)) {
