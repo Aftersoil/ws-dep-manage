@@ -10,10 +10,13 @@ import com.ws.table.GenerateTableMysql;
 import com.ws.tool.CacheTool;
 import com.ws.tool.CommonParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,23 +29,23 @@ import java.util.stream.Collectors;
  * @author GSF
  */
 @Slf4j
-public class ConfigManager implements InitializingBean {
+public class ConfigManager implements ApplicationContextAware {
 
-    private final ApplicationContext applicationContext;
-    private final EnableConfig enableConfig;
-
-    public ConfigManager(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-        this.enableConfig = CommonParam.mainClazz.getAnnotation(EnableConfig.class);
-    }
+    private ApplicationContext applicationContext;
+    private EnableConfig enableConfig;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+        this.enableConfig = CommonParam.mainClazz.getAnnotation(EnableConfig.class);
         CommonParam.applicationContext = applicationContext;
-        CommonParam.modelClazz = CommonParam.getTargetPackageModelClazz(this.enableConfig.modelPackage());
-        this.cacheConfig();
-        this.tableConfig();
-//        this.optionalMapper();
+        try {
+            CommonParam.modelClazz = CommonParam.getTargetPackageModelClazz(this.enableConfig.modelPackage());
+            this.cacheConfig();
+            this.tableConfig();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void cacheConfig() {

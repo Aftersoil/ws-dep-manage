@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.*;
 import com.ws.enu.CommonErrorInfo;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,7 @@ public class ResultBody<T> implements Serializable {
      *
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> success() {
         return ResultBody.success(null);
     }
@@ -68,6 +70,7 @@ public class ResultBody<T> implements Serializable {
      * @param data 响应数据
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> success(T data) {
         return ResultBody.success(data, CommonErrorInfo.SUCCESS.getResultMsg());
     }
@@ -79,6 +82,7 @@ public class ResultBody<T> implements Serializable {
      * @param message 提示信息
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> success(T data, String message) {
         return ResultBody.success(data, CommonErrorInfo.SUCCESS.getResultCode(), message);
     }
@@ -90,6 +94,7 @@ public class ResultBody<T> implements Serializable {
      * @param message 提示信息
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> success(T data, String code, String message) {
         return ResultBody.build(data, code, message, true);
     }
@@ -99,6 +104,7 @@ public class ResultBody<T> implements Serializable {
      *
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> warn() {
         return ResultBody.warn(null);
     }
@@ -108,6 +114,7 @@ public class ResultBody<T> implements Serializable {
      *
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> warn(String message) {
         return ResultBody.warn(null, message);
     }
@@ -117,6 +124,7 @@ public class ResultBody<T> implements Serializable {
      *
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> warn(T data) {
         return ResultBody.warn(data, CommonErrorInfo.SUCCESS.getResultMsg());
     }
@@ -128,6 +136,7 @@ public class ResultBody<T> implements Serializable {
      * @param message 提示信息
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> warn(T data, String message) {
         return ResultBody.warn(data, "-1", message);
     }
@@ -140,6 +149,7 @@ public class ResultBody<T> implements Serializable {
      * @param message 提示信息
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> warn(T data, String code, String message) {
         return ResultBody.build(data, code, message, false);
     }
@@ -150,15 +160,18 @@ public class ResultBody<T> implements Serializable {
      * @param message 提示信息
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> error(String message) {
         return ResultBody.error(CommonErrorInfo.ERROR.getResultCode(), message);
     }
 
-    public static <T> ResultBody<T> error(HttpStatus httpStatus) {
+    @NotNull
+    public static <T> ResultBody<T> error(@NotNull HttpStatus httpStatus) {
         return ResultBody.error(String.valueOf(httpStatus.value()), httpStatus.getReasonPhrase());
     }
 
-    public static <T> ResultBody<T> error(CommonErrorInfo commonErrorInfo) {
+    @NotNull
+    public static <T> ResultBody<T> error(@NotNull CommonErrorInfo commonErrorInfo) {
         return ResultBody.error(commonErrorInfo.getResultCode(), commonErrorInfo.getResultMsg());
     }
 
@@ -169,6 +182,7 @@ public class ResultBody<T> implements Serializable {
      * @param message 提示信息
      * @return ResultBody
      **/
+    @NotNull
     public static <T> ResultBody<T> error(String code, String message) {
         return ResultBody.build(null, code, message, false);
     }

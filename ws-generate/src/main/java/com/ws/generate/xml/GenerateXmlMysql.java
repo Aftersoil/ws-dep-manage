@@ -10,7 +10,6 @@ import org.dom4j.Element;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -239,9 +238,9 @@ public class GenerateXmlMysql<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     }
 
     @Override
-    public org.dom4j.Element generateGetListTotal() {
+    public org.dom4j.Element generateGetTotal() {
         org.dom4j.Element totalElement = this.generateXmlElement("select");
-        totalElement.addAttribute("id", CommonStaticField.GET_LIST_TOTAL_METHOD_NAME);
+        totalElement.addAttribute("id", CommonStaticField.GET_TOTAL_METHOD_NAME);
         totalElement.addAttribute("parameterType", "Map");
         totalElement.addAttribute("resultType", Integer.class.getSimpleName());
         totalElement.addText(CommonStaticField.WRAP);
@@ -264,41 +263,6 @@ public class GenerateXmlMysql<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         this.getIf(tempFields, whereElement::add);
 
         totalElement.add(whereElement);
-
-        return totalElement;
-    }
-
-    @Override
-    public org.dom4j.Element generateGetNestListTotal() {
-        F primaryField = this.getModel().getPrimaryField();
-        String primaryFieldName = Objects.isNull(primaryField) ? "id" : primaryField.getName();
-        org.dom4j.Element totalElement = this.generateXmlElement("select");
-        totalElement.addAttribute("id", CommonStaticField.GET_NEST_LIST_TOTAL_METHOD_NAME);
-        totalElement.addAttribute("parameterType", "Map");
-        totalElement.addAttribute("resultType", Integer.class.getSimpleName());
-        totalElement.addText(CommonStaticField.WRAP);
-        totalElement.addText(StringUtil.concat("select count(", this.getBackQuoteStr(primaryFieldName), ") from (select ", this.getBackQuoteStr(this.getModel().getTableName()), ".", this.getBackQuoteStr(primaryFieldName), " from ", this.getModel().getTableName()));
-        totalElement.addText(CommonStaticField.WRAP);
-
-        List<F> joinFields = new ArrayList<>();
-        joinFields.addAll(this.getModel().getClazzJoinFields());
-        joinFields.addAll(this.getModel().getCollectionJoinFields());
-
-        totalElement.addText(this.getFieldsJoinText(joinFields));
-
-        List<F> tempFields = new ArrayList<>();
-        tempFields.addAll(this.getModel().getBaseFields());
-        tempFields.addAll(this.getModel().getClazzJoinFields());
-        tempFields.addAll(this.getModel().getCollectionJoinFields());
-
-        org.dom4j.Element whereElement = this.generateXmlElement("where");
-
-        this.getIf(tempFields, whereElement::add);
-
-        totalElement.add(whereElement);
-
-        totalElement.addText(CommonStaticField.WRAP);
-        totalElement.addText(StringUtil.concat("group by ", this.getBackQuoteStr(this.getModel().getTableName()), ".", this.getBackQuoteStr(primaryFieldName), ") as data"));
 
         return totalElement;
     }

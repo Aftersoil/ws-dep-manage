@@ -16,8 +16,7 @@ public class CommonStaticField {
     public static final String SELECT_METHOD_NAME = "_select";
     public static final String GET_LIST_METHOD_NAME = "_getList";
     public static final String GET_NEST_LIST_METHOD_NAME = "_getNestList";
-    public static final String GET_LIST_TOTAL_METHOD_NAME = "_getListTotal";
-    public static final String GET_NEST_LIST_TOTAL_METHOD_NAME = "_getNestListTotal";
+    public static final String GET_TOTAL_METHOD_NAME = "_getTotal";
     public static final String FILE_DOT = "\\.";
     public static final String JAVA_SUFFIX = ".java";
     public static final String BASE_MODEL_CLAZZ_SIMPLE_NAME = BaseModel.class.getSimpleName();

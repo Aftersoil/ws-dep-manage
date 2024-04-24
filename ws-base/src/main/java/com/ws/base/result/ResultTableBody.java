@@ -23,6 +23,7 @@ public class ResultTableBody<T> extends ResultBody<T> {
     public ResultTableBody() {
     }
 
+    @NotNull
     public static <T> ResultTableBody<T> build(T data, int total, List<ColumnType> columns, String code, String message, boolean status) {
         ResultTableBody<T> resultTableBody = new ResultTableBody<>();
         resultTableBody.setData(data);

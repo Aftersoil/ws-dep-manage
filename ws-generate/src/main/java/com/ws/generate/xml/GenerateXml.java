@@ -103,12 +103,8 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         org.dom4j.Element getNestListElement = this.generateGetNestList();
         rootElement.add(getNestListElement);
         rootElement.addText(CommonStaticField.WRAP);
-        org.dom4j.Element getTotalElement = this.generateGetListTotal();
+        org.dom4j.Element getTotalElement = this.generateGetTotal();
         rootElement.add(getTotalElement);
-        rootElement.addText(CommonStaticField.WRAP);
-        Element getNestListTotalElement = this.generateGetNestListTotal();
-        rootElement.add(getNestListTotalElement);
-        rootElement.addText(CommonStaticField.WRAP);
         document.setRootElement(rootElement);
         this.setMapperDocument(document);
         return this.getMapperDocument();
@@ -134,9 +130,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
 
     abstract org.dom4j.Element generateGetNestList();
 
-    abstract org.dom4j.Element generateGetListTotal();
-
-    abstract org.dom4j.Element generateGetNestListTotal();
+    abstract org.dom4j.Element generateGetTotal();
 
     public @NotNull List<org.dom4j.Element> getFieldsResultMapResults(@NotNull List<F> fields) {
         List<org.dom4j.Element> elements = new ArrayList<>();

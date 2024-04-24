@@ -61,8 +61,6 @@ public interface BaseDataService<M extends BaseDataMapper<T>, T extends BaseMode
      **/
     List<T> getNestList(Map<String, Object> map);
 
-    int getListTotal(Map<String, Object> map);
-
-    int getNestListTotal(Map<String, Object> map);
+    int getTotal(Map<String, Object> map);
 
 }

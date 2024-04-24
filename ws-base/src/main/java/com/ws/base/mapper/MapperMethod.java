@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+@Deprecated
 public class MapperMethod {
 
     public String selectMax(ProviderContext context) {

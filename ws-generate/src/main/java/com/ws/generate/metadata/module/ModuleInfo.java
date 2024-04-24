@@ -31,7 +31,7 @@ public interface ModuleInfo extends Module {
     }
 
     default String getModulePackagePath() {
-        return StringUtil.concat(this.getModulePath(), "src", File.separator, "main", File.separator, "java", File.separator, this.getModulePackageName().replace(FILE_DOT, File.separator), File.separator);
+        return StringUtil.concat(this.getModulePath(), "src", File.separator, "main", File.separator, "java", File.separator, this.getModulePackageName().replaceAll(FILE_DOT, StringUtil.concat("\\", File.separator)), File.separator);
     }
 
     default String getModuleModelPath() {

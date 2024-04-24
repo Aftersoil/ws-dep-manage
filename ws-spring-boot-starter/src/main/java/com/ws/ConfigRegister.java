@@ -18,12 +18,11 @@ public class ConfigRegister implements ImportBeanDefinitionRegistrar {
             CommonParam.mainClazz = clazz;
             EnableConfig enableConfig = clazz.getAnnotation(EnableConfig.class);
             if (enableConfig.enableExceptionHandle()) {
-                BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition();
-                builder.getBeanDefinition().setBeanClass(IExceptionHandler.class);
+                BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(IExceptionHandler.class);
                 registry.registerBeanDefinition("iExceptionHandler", builder.getBeanDefinition());
             }
-            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition();
-            builder.getBeanDefinition().setBeanClass(ConfigManager.class);
+            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ConfigManager.class);
+            builder.setLazyInit(false);
             registry.registerBeanDefinition("configManager", builder.getBeanDefinition());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

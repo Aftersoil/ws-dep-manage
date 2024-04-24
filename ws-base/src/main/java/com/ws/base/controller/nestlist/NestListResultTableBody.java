@@ -26,7 +26,7 @@ public interface NestListResultTableBody<S extends AbstractBaseDataService<? ext
     @ResponseBody
     public default ResultBody<List<T>> getNestList(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
         Map<String, Object> params = this.getRequestParams(request);
-        return ResultTableBody.success(this.getService().getNestList(params), this.getService().getNestListTotal(params), CacheTool.getControllerModelGenericColumnType(this.getClass()));
+        return ResultTableBody.success(this.getService().getNestList(params), this.getService().getTotal(params), CacheTool.getControllerModelGenericColumnType(this.getClass()));
     }
 
 }

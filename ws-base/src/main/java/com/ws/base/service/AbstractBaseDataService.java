@@ -515,11 +515,11 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
     }
 
     @Override
-    public int getListTotal(@NotNull Map<String, Object> map) {
-        return this.getMapper()._getListTotal(map);
+    public int getTotal(@NotNull Map<String, Object> map) {
+        return this.getMapper()._getTotal(map);
     }
 
-    public int getListTotal(@NotNull Object... keyValuesArray) {
+    public int getTotal(@NotNull Object... keyValuesArray) {
         Map<String, Object> map = new HashMap<>();
         int length = keyValuesArray.length;
         for (int i = 0; i < keyValuesArray.length; i++) {
@@ -527,31 +527,11 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
                 map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
             }
         }
-        return this.getListTotal(map);
+        return this.getTotal(map);
     }
 
-    public int getListTotal() {
-        return this.getListTotal(Map.of());
-    }
-
-    @Override
-    public int getNestListTotal(@NotNull Map<String, Object> map) {
-        return this.getMapper()._getNestListTotal(map);
-    }
-
-    public int getNestListTotal(@NotNull Object... keyValuesArray) {
-        Map<String, Object> map = new HashMap<>();
-        int length = keyValuesArray.length;
-        for (int i = 0; i < keyValuesArray.length; i++) {
-            if (i % 2 == 0 && length >= i + 1) {
-                map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
-            }
-        }
-        return this.getNestListTotal(map);
-    }
-
-    public int getNestListTotal() {
-        return this.getNestListTotal(List.of());
+    public int getTotal() {
+        return this.getTotal(Map.of());
     }
 
     @Transactional
@@ -628,4 +608,3 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
     }
 
 }
-

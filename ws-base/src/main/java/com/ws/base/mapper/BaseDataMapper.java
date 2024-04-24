@@ -73,18 +73,6 @@ public interface BaseDataMapper<T extends BaseModel> extends BaseMapper {
      * @param map 查询参数
      * @return int 数据条数
      **/
-    int _getListTotal(Map<String, Object> map);
-
-    /**
-     * <p>数据条数</p>
-     *
-     * @param map 查询参数
-     * @return int 数据条数
-     **/
-    int _getNestListTotal(Map<String, Object> map);
-
-//    @SelectProvider(type = MapperMethod.class, method = "selectMax")
-//    @ResultType(Integer.class)
-//    Integer selectMax(String column);
+    int _getTotal(Map<String, Object> map);
 
 }

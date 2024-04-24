@@ -26,7 +26,7 @@ public interface ListTableResultTableBody<S extends AbstractBaseDataService<? ex
     @ResponseBody
     public default ResultBody<List<Map<String, Object>>> getList(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
         Map<String, Object> params = this.getRequestParams(request);
-        return ResultTableBody.success(this.getService().getList(params), this.getService().getListTotal(params), CacheTool.getControllerModelGenericColumnType(this.getClass()));
+        return ResultTableBody.success(this.getService().getList(params), this.getService().getTotal(params), CacheTool.getControllerModelGenericColumnType(this.getClass()));
     }
 
 }
