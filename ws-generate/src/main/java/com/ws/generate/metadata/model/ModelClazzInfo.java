@@ -42,7 +42,8 @@ public class ModelClazzInfo extends AbstractModelInfo<Class<? extends BaseModel>
     public void initBaseInfo(ModuleInfo moduleInfo, @NotNull Class<? extends BaseModel> metaData, boolean ignoreJoinFields) {
         Data dataAnnotation = metaData.getAnnotation(Data.class);
         this.setDataAnnotation(dataAnnotation);
-        this.setDefaultModelKeyword(dataAnnotation.modelDefaultKeyword());
+        this.setDataBaseType(dataAnnotation.dataBaseType());
+        this.setModelDefaultKeyword(dataAnnotation.modelDefaultKeyword());
         this.setTableName(this.initTableName(moduleInfo, metaData, ignoreJoinFields));
         this.setModelTitle(dataAnnotation.title());
         this.setModelName(metaData.getSimpleName());
@@ -70,7 +71,7 @@ public class ModelClazzInfo extends AbstractModelInfo<Class<? extends BaseModel>
         this.setCollectionJoinFields(fields.stream().filter(AbstractColumnInfo::isCollectionJoinField).toList());
         this.setKeyWordFields(fields.stream().filter(AbstractColumnInfo::isKeywordField).collect(Collectors.toList()));
         this.setPrimaryField(fields.stream().filter(AbstractColumnInfo::isPrimaryField).findFirst().orElse(null));
-        this.setDefaultModelKeyWordField(this.getFieldByName(this.getDefaultModelKeyword()));
+        this.setDefaultModelKeyWordField(this.getFieldByName(this.getModelDefaultKeyword()));
     }
 
     private String initTableName(ModuleInfo moduleInfo, @NotNull Class<? extends BaseModel> metaData, boolean ignoreJoinFields) {
@@ -78,7 +79,7 @@ public class ModelClazzInfo extends AbstractModelInfo<Class<? extends BaseModel>
         String table = null;
         if (Objects.nonNull(dataAnnotation)) {
             this.setDataAnnotation(dataAnnotation);
-            this.setDefaultModelKeyword(dataAnnotation.modelDefaultKeyword());
+            this.setModelDefaultKeyword(dataAnnotation.modelDefaultKeyword());
             table = dataAnnotation.table();
         }
         if (StringUtil.isEmpty(table)) {

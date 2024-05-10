@@ -2,10 +2,14 @@ package com.ws.generate.metadata.field;
 
 import com.ws.annotation.Join;
 import com.ws.enu.Condition;
+import com.ws.enu.DataBaseType;
 import com.ws.enu.JoinCondition;
 import com.ws.enu.JoinType;
 import com.ws.generate.metadata.model.ModelInfo;
+import com.ws.tool.MysqlTypeMapInfo;
 import com.ws.tool.StringUtil;
+import org.apache.ibatis.type.JdbcType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,14 +26,9 @@ public interface ColumnInfo<T, M extends ModelInfo<?, ?>> extends Column {
 
     M getRightModel();
 
-//    @Deprecated
-//    FieldType getFieldType();
-
     String getName();
 
-    String getType();
-
-    String getMybatisJdbcType();
+    String getJavaTypeName();
 
     com.ws.annotation.Column getColumn();
 
@@ -58,11 +57,23 @@ public interface ColumnInfo<T, M extends ModelInfo<?, ?>> extends Column {
         return comment;
     }
 
+    String getJdbcType();
+
+    default @NotNull JdbcType getMybatisJdbcType() {
+        JdbcType mybatisJdbcType;
+        switch (this.getModel().getDataBaseType()) {
+            case DataBaseType.mysql -> mybatisJdbcType = MysqlTypeMapInfo.getMybatisJdbcTypeByDbColumnType(this.getJdbcType());
+            case DataBaseType.oracle, DataBaseType.sqlServer -> throw new IllegalArgumentException("暂无对应数据库类型实现");
+            default -> throw new IllegalArgumentException("没有匹配的数据库类型");
+        }
+        return mybatisJdbcType;
+    }
+
     default List<Condition> getConditions() {
         if (this.isBaseField()) {
             return Arrays.asList(this.getColumn().conditions());
         }
-        return null;
+        return new ArrayList<>();
     }
 
     default boolean isBaseField() {
@@ -88,7 +99,7 @@ public interface ColumnInfo<T, M extends ModelInfo<?, ?>> extends Column {
     }
 
     default boolean isCollectionJoinField() {
-        return this.isJoinField() && this.getType().contains(List.class.getSimpleName());
+        return this.isJoinField() && this.getJavaTypeName().contains(List.class.getSimpleName());
     }
 
     default List<String> getLeftSelectFieldNames() {

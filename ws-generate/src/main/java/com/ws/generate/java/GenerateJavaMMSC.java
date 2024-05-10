@@ -81,7 +81,7 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
             FieldSpec.Builder fieldSpec = null;
             if (item.isBaseField()) {
                 try {
-                    Class<?> clazz = Class.forName(item.getType());
+                    Class<?> clazz = Class.forName(item.getJavaTypeName());
                     fieldSpec = GenerateJavaUtil.generateFieldBuilder(TypeName.get(clazz), item.getName(), Modifier.PRIVATE);
                     AnnotationSpec.Builder columnAnnotation = GenerateJavaUtil.generateAnnotationBuilder(Column.class);
                     columnAnnotation.addMember("title", "$S", item.getTitle());
@@ -90,7 +90,7 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
                     columnAnnotation.addMember("primary", "$L", item.isPrimaryField());
                     fieldSpec.addAnnotation(columnAnnotation.build());
                 } catch (ClassNotFoundException e) {
-                    this.printError(StringUtil.concat("加载类: ", item.getType(), " 失败"));
+                    this.printError(StringUtil.concat("加载类: ", item.getJavaTypeName(), " 失败"));
                 }
             } else if (item.isCollectionJoinField()) {
                 ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(List.class, BaseModel.class);

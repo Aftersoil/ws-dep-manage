@@ -1,6 +1,7 @@
 package com.ws.generate.metadata.model;
 
 import com.ws.annotation.Data;
+import com.ws.enu.DataBaseType;
 import com.ws.generate.metadata.field.ColumnInfo;
 import com.ws.generate.metadata.module.ModuleInfo;
 
@@ -13,7 +14,8 @@ public abstract class AbstractModelInfo<T, F extends ColumnInfo<?, ?>> implement
     private T metaData;
 
     private Data dataAnnotation;
-    private String defaultModelKeyword;
+    private DataBaseType dataBaseType;
+    private String modelDefaultKeyword;
     private String tableName;
     private String modelTitle;
     private String modelName;
@@ -87,10 +89,6 @@ public abstract class AbstractModelInfo<T, F extends ColumnInfo<?, ?>> implement
         this.setApiNestList(ModelInfo.super.getApiNestList());
         this.setApiExport(ModelInfo.super.getApiExport());
         this.setApiImport(ModelInfo.super.getApiImport());
-    }
-
-    public void initPathInfo() {
-
     }
 
 }

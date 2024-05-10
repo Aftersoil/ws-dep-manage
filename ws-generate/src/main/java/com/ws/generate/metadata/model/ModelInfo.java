@@ -2,6 +2,7 @@ package com.ws.generate.metadata.model;
 
 import cn.hutool.core.util.StrUtil;
 import com.ws.annotation.Data;
+import com.ws.enu.DataBaseType;
 import com.ws.generate.metadata.field.ColumnInfo;
 import com.ws.generate.metadata.module.ModuleInfo;
 import com.ws.tool.StringUtil;
@@ -19,11 +20,21 @@ public interface ModelInfo<T, F extends ColumnInfo<?, ?>> extends Model {
 
     Data getDataAnnotation();
 
-    String getDefaultModelKeyword();
+    default DataBaseType getDataBaseType() {
+        return this.getDataAnnotation().dataBaseType();
+    }
 
-    String getTableName();
+    default String getModelDefaultKeyword() {
+        return this.getDataAnnotation().modelDefaultKeyword();
+    }
 
-    String getModelTitle();
+    default String getTableName() {
+        return this.getDataAnnotation().table();
+    }
+
+    default String getModelTitle() {
+        return this.getDataAnnotation().title();
+    }
 
     String getModelName();
 
@@ -60,7 +71,7 @@ public interface ModelInfo<T, F extends ColumnInfo<?, ?>> extends Model {
     }
 
     default F getDefaultModelKeyWordField() {
-        return this.getFieldByName(this.getDefaultModelKeyword());
+        return this.getFieldByName(this.getModelDefaultKeyword());
     }
 
     default F getFieldByName(String name) {

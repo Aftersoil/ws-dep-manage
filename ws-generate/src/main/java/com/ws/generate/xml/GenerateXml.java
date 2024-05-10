@@ -11,6 +11,7 @@ import com.ws.generate.metadata.field.ColumnInfo;
 import com.ws.generate.metadata.model.ModelInfo;
 import com.ws.tool.CommonStaticField;
 import com.ws.tool.StringUtil;
+import org.apache.ibatis.type.JdbcType;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -164,16 +165,16 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
             if (primaryField.isPresent()) {
                 String property = primaryField.get().getName();
                 String column = StringUtil.concat(field.getName(), field.getInfix(), StringUtils.capitalize(property));
-                String jdbcType = primaryField.get().getMybatisJdbcType();
-                Element idResultElement = this.getResultMapElement(column, jdbcType, property, primaryField.get().isPrimaryField());
+                JdbcType mybatisJdbcType = primaryField.get().getMybatisJdbcType();
+                Element idResultElement = this.getResultMapElement(column, mybatisJdbcType.name(), property, primaryField.get().isPrimaryField());
                 collectionElement.add(idResultElement);
             }
             baseFields = baseFields.stream().filter(item -> !item.isPrimaryField()).toList();
             for (F baseField : baseFields) {
                 String property = baseField.getName();
                 String column = StringUtil.concat(field.getName(), field.getInfix(), StringUtils.capitalize(property));
-                String jdbcType = baseField.getMybatisJdbcType();
-                Element idResultElement = this.getResultMapElement(column, jdbcType, property, baseField.isPrimaryField());
+                JdbcType mybatisJdbcType = baseField.getMybatisJdbcType();
+                Element idResultElement = this.getResultMapElement(column, mybatisJdbcType.name(), property, baseField.isPrimaryField());
                 collectionElement.add(idResultElement);
             }
             return collectionElement;
@@ -390,13 +391,13 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
     }
 
     public org.dom4j.Element getResultMapElement(@NotNull F field) {
-        return this.getResultMapElement(field.getName(), field.getMybatisJdbcType(), field.getName(), field.isPrimaryField());
+        return this.getResultMapElement(field.getName(), field.getMybatisJdbcType().name(), field.getName(), field.isPrimaryField());
     }
 
-    public org.dom4j.Element getResultMapElement(String column, String jdbcType, String property, boolean isPrimary) {
+    public org.dom4j.Element getResultMapElement(String column, @NotNull String mybatisJdbcType, String property, boolean isPrimary) {
         org.dom4j.Element resultElement = isPrimary ? this.generateXmlElement("id") : this.generateXmlElement("result");
         resultElement.addAttribute("column", column);
-        resultElement.addAttribute("jdbcType", jdbcType);
+        resultElement.addAttribute("jdbcType", mybatisJdbcType);
         resultElement.addAttribute("property", property);
         return resultElement;
     }

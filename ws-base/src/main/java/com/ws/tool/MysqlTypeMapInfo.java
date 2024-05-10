@@ -1,5 +1,6 @@
 package com.ws.tool;
 
+import org.apache.ibatis.type.JdbcType;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
@@ -11,131 +12,167 @@ import java.util.Objects;
 
 public class MysqlTypeMapInfo {
 
-    public static final Map<String, String> JAVA_MAP_MYBATIS_SQL_TYPE = new HashMap<>();
-    public static final Map<String, String> SQL_MAP_JAVA_TYPE = new HashMap<>();
-    public static final Map<String, Integer> SQL_TYPE_MAP_DEFAULT_LENGTH = new HashMap<>();
+    private static final Map<String, String> JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE = new HashMap<>();
+    private static final Map<String, String> DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME = new HashMap<>();
+    private static final Map<String, Integer> DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH = new HashMap<>();
+    private static final Map<String, JdbcType> DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE = new HashMap<>();
 
     static {
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Integer.class.getName(), "INTEGER");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Long.class.getName(), "BIGINT");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Short.class.getName(), "SMALLINT");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Float.class.getName(), "FLOAT");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Double.class.getName(), "DOUBLE");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Boolean.class.getName(), "VARCHAR");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Character.class.getName(), "CHAR");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(BigDecimal.class.getName(), "DECIMAL");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(String.class.getName(), "VARCHAR");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Date.class.getName(), "TIMESTAMP");
-        JAVA_MAP_MYBATIS_SQL_TYPE.put(Byte[].class.getName(), "BLOB");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Integer.class.getName(), "INTEGER");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Long.class.getName(), "BIGINT");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Short.class.getName(), "SMALLINT");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Float.class.getName(), "FLOAT");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Double.class.getName(), "DOUBLE");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Boolean.class.getName(), "VARCHAR");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Character.class.getName(), "CHAR");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(BigDecimal.class.getName(), "DECIMAL");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(String.class.getName(), "VARCHAR");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Date.class.getName(), "TIMESTAMP");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Byte[].class.getName(), "BLOB");
     }
 
     static {
-        SQL_MAP_JAVA_TYPE.put("INTEGER", Integer.class.getName());
-        SQL_MAP_JAVA_TYPE.put("INT", Integer.class.getName());
-        SQL_MAP_JAVA_TYPE.put("DECIMAL", BigDecimal.class.getName());
-        SQL_MAP_JAVA_TYPE.put("BIGINT", Long.class.getName());
-        SQL_MAP_JAVA_TYPE.put("SMALLINT", Short.class.getName());
-        SQL_MAP_JAVA_TYPE.put("FLOAT", Float.class.getName());
-        SQL_MAP_JAVA_TYPE.put("DOUBLE", Double.class.getName());
-        SQL_MAP_JAVA_TYPE.put("CHAR", Character.class.getName());
-        SQL_MAP_JAVA_TYPE.put("VARCHAR", String.class.getName());
-        SQL_MAP_JAVA_TYPE.put("LONGTEXT", String.class.getName());
-        SQL_MAP_JAVA_TYPE.put("TEXT", String.class.getName());
-        SQL_MAP_JAVA_TYPE.put("ENUM", String.class.getName());
-        SQL_MAP_JAVA_TYPE.put("BIT", String.class.getName());
-        SQL_MAP_JAVA_TYPE.put("TINYINT", String.class.getName());
-        SQL_MAP_JAVA_TYPE.put("JSON", String.class.getName());
-        SQL_MAP_JAVA_TYPE.put("TIMESTAMP", Date.class.getName());
-        SQL_MAP_JAVA_TYPE.put("DATETIME", Date.class.getName());
-        SQL_MAP_JAVA_TYPE.put("DATE", Date.class.getName());
-        SQL_MAP_JAVA_TYPE.put("BLOB", Byte[].class.getName());
-        SQL_MAP_JAVA_TYPE.put("VARBINARY", Byte[].class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("INTEGER", Integer.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("INT", Integer.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("DECIMAL", BigDecimal.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("BIGINT", Long.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("SMALLINT", Short.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("FLOAT", Float.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("DOUBLE", Double.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("CHAR", Character.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("VARCHAR", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("LONGTEXT", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("TEXT", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("ENUM", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("BIT", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("TINYINT", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("JSON", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("TIMESTAMP", Date.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("DATETIME", Date.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("DATE", Date.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("BLOB", Byte[].class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("VARBINARY", Byte[].class.getName());
     }
 
     static {
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("TINYINT", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("SMALLINT", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("MEDIUMINT", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("INT", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("INTEGER", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("BIGINT", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("FLOAT", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("DOUBLE", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("REAL", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("DECIMAL", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("NUMERIC", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("DATE", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("TIME", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("DATETIME", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("TIMESTAMP", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("YEAR", 4);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("CHAR", 1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("VARCHAR", 255);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("BINARY", 1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("VARBINARY", 255);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("TINYBLOB", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("BLOB", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("MEDIUMBLOB", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("LONGBLOB", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("TINYTEXT", 255);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("TEXT", 6553);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("MEDIUMTEXT", 6553);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("LONGTEXT", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("ENUM", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("SET", -1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("BOOLEAN", 1);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("SERIAL", 4);
-        SQL_TYPE_MAP_DEFAULT_LENGTH.put("JSON", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("TINYINT", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("SMALLINT", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("MEDIUMINT", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("INT", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("INTEGER", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("BIGINT", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("FLOAT", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("DOUBLE", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("REAL", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("DECIMAL", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("NUMERIC", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("DATE", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("TIME", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("DATETIME", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("TIMESTAMP", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("YEAR", 4);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("CHAR", 1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("VARCHAR", 255);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("BINARY", 1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("VARBINARY", 255);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("TINYBLOB", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("BLOB", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("MEDIUMBLOB", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("LONGBLOB", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("TINYTEXT", 255);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("TEXT", 6553);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("MEDIUMTEXT", 6553);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("LONGTEXT", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("ENUM", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("SET", -1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("BOOLEAN", 1);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("SERIAL", 4);
+        DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.put("JSON", -1);
+    }
+
+    static {
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("CHAR", JdbcType.CHAR);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("VARCHAR", JdbcType.VARCHAR);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("LONGTEXT", JdbcType.LONGNVARCHAR);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("NUMERIC", JdbcType.NUMERIC);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("DECIMAL", JdbcType.DECIMAL);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("INTEGER", JdbcType.INTEGER);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("SMALLINT", JdbcType.SMALLINT);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("BIGINT", JdbcType.BIGINT);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("REAL", JdbcType.REAL);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("FLOAT", JdbcType.FLOAT);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("DOUBLE", JdbcType.DOUBLE);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("DATE", JdbcType.DATE);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("TIME", JdbcType.TIME);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("TIMESTAMP", JdbcType.TIMESTAMP);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("BOOLEAN", JdbcType.BOOLEAN);
     }
 
     @NotNull
-    public static String getMybatisType(@NotNull Field field) {
+    public static String getDbColumnTypeByField(@NotNull Field field) {
         String type = field.getType().getName();
-        String mysqlType = JAVA_MAP_MYBATIS_SQL_TYPE.get(type);
+        String mysqlType = JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.get(type);
         if (mysqlType == null) {
             throw new IllegalArgumentException("Unsupported field: " + field);
         }
         return mysqlType;
     }
 
-    public static String getMybatisType(String javaType) {
-        String mysqlType = JAVA_MAP_MYBATIS_SQL_TYPE.get(javaType);
+    public static String getDbColumnTypeByJavaTypeName(String javaTypeName) {
+        String mysqlType = JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.get(javaTypeName);
         if (StringUtil.isEmpty(mysqlType)) {
-            throw new IllegalArgumentException("Unsupported type: " + javaType);
+            throw new IllegalArgumentException("Unsupported javaTypeName: " + javaTypeName);
         }
         return mysqlType;
     }
 
-    public static String getJavaType(@NotNull String sqlType) {
-        String javaType = SQL_MAP_JAVA_TYPE.get(sqlType.toUpperCase());
+    public static String getJavaTypeNameByDbColumnType(@NotNull String dbColumnType) {
+        String javaType = DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.get(dbColumnType.toUpperCase());
         if (StringUtil.isEmpty(javaType)) {
-            throw new IllegalArgumentException("Unsupported type: " + sqlType);
+            throw new IllegalArgumentException("Unsupported dbColumnType: " + dbColumnType);
         }
         return javaType;
     }
 
-    public static Integer getSqlTypeDefaultLength(Field field) {
-        Integer length = SQL_TYPE_MAP_DEFAULT_LENGTH.get(getMybatisType(field));
+    public static Integer getDbColumnTypeDefaultLengthByField(Field field) {
+        Integer length = DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.get(getDbColumnTypeByField(field));
         if (Objects.isNull(length)) {
             throw new IllegalArgumentException("Unsupported field: " + field);
         }
         return length;
     }
 
-    public static Integer getSqlTypeDefaultLengthBySqlType(String sqlType) {
-        Integer length = SQL_TYPE_MAP_DEFAULT_LENGTH.get(sqlType);
+    public static Integer getDbColumnTypeDefaultLengthByMybatisJdbcType(String dbColumnType) {
+        Integer length = DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.get(dbColumnType);
         if (Objects.isNull(length)) {
-            throw new IllegalArgumentException("Unsupported type: " + sqlType);
+            throw new IllegalArgumentException("Unsupported dbColumnType: " + dbColumnType);
         }
         return length;
     }
 
-    public static Integer getSqlTypeDefaultLength(String javaType) {
-        Integer length = SQL_TYPE_MAP_DEFAULT_LENGTH.get(getMybatisType(javaType));
+    public static Integer getDbColumnTypeDefaultLengthByJavaTypeName(String javaTypeName) {
+        Integer length = DB_COLUMN_TYPE_MAP_DEFAULT_LENGTH.get(getDbColumnTypeByJavaTypeName(javaTypeName));
         if (Objects.isNull(length)) {
-            throw new IllegalArgumentException("Unsupported javaType: " + javaType);
+            throw new IllegalArgumentException("Unsupported javaTypeName: " + javaTypeName);
         }
         return length;
+    }
+
+    public static JdbcType getMybatisJdbcTypeByDbColumnType(@NotNull String dbColumnType) {
+        JdbcType jdbcType = DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.get(dbColumnType.toUpperCase());
+        if (Objects.isNull(jdbcType)) {
+            throw new IllegalArgumentException("Unsupported dbColumnType: " + dbColumnType);
+        }
+        return jdbcType;
+    }
+
+    @NotNull
+    public static String getMybatisJdbcTypeStrByDbColumnType(@NotNull String dbColumnType) {
+        JdbcType jdbcType = DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.get(dbColumnType.toUpperCase());
+        if (Objects.isNull(jdbcType)) {
+            throw new IllegalArgumentException("Unsupported dbColumnType: " + dbColumnType);
+        }
+        return jdbcType.name();
     }
 
 }

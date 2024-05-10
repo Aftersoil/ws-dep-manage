@@ -30,23 +30,23 @@
 
 ``` xml
 <!--基本功能-->
-<dependency>
+<pomDependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-base</artifactId>
     <version>1.2.0</version>
-</dependency>
+</pomDependency>
 
 <!--可选-->
-<dependency>
+<pomDependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-spring-boot-starter</artifactId>
     <version>1.2.0</version>
-</dependency>
+</pomDependency>
 
 <!--可选-->
-<dependency>
+<pomDependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-generate</artifactId>
     <version>1.2.0</version>
-</dependency>
+</pomDependency>
 ```

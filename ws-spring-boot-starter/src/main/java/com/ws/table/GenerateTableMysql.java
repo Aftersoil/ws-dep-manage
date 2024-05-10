@@ -157,7 +157,7 @@ public class GenerateTableMysql extends GenerateTable {
             jdbcType = column.jdbcType();
         }
         if (StringUtil.isEmpty(jdbcType)) {
-            jdbcType = MysqlTypeMapInfo.getMybatisType(field);
+            jdbcType = MysqlTypeMapInfo.getDbColumnTypeByField(field);
         }
         return jdbcType;
     }
@@ -166,7 +166,7 @@ public class GenerateTableMysql extends GenerateTable {
     public int getDefaultLength(@NotNull Field field) {
         int length = field.getAnnotation(Column.class).length();
         if (length == -1) {
-            length = MysqlTypeMapInfo.getSqlTypeDefaultLengthBySqlType(this.getJdbcType(field).toUpperCase());
+            length = MysqlTypeMapInfo.getDbColumnTypeDefaultLengthByMybatisJdbcType(this.getJdbcType(field).toUpperCase());
         }
         return length;
     }

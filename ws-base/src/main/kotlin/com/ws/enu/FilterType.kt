@@ -1,20 +1,13 @@
 package com.ws.enu
 
 enum class FilterType {
-    NAME,
+    NAME, PASSWORD, PHONE, EMAIL, ID_CARD, ADDRESS, ACCOUNT, NULL;
 
-    PASSWORD,
-
-    PHONE,
-
-    EMAIL,
-
-    ID_CARD,
-
-    ADDRESS,
-
-    ACCOUNT,
-
-    NULL;
+    companion object {
+        @JvmStatic
+        fun fromName(name: String): DataBaseType? {
+            return enumValues<DataBaseType>().find { it.name == name }
+        }
+    }
 }
 

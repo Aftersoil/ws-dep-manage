@@ -6,19 +6,12 @@ package com.ws.enu
 
  **/
 enum class Condition {
-    equal,
-    less,
-    great,
-    like,
-    `in`,
-    isNull,
-    isNotNull,
-    orEqual,
-    orLess,
-    orGreat,
-    orLike,
-    orIn,
-    orIsNull,
-    orIsNotNull,
-    all
+    equal, less, great, like, `in`, isNull, isNotNull, orEqual, orLess, orGreat, orLike, orIn, orIsNull, orIsNotNull, all;
+
+    companion object {
+        @JvmStatic
+        fun fromName(name: String): DataBaseType? {
+            return enumValues<DataBaseType>().find { it.name == name }
+        }
+    }
 }

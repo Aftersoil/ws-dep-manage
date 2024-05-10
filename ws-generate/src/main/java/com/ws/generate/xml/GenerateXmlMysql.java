@@ -46,7 +46,7 @@ public class GenerateXmlMysql<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         insertElement.addAttribute("id", CommonStaticField.SAVE_METHOD_NAME);
         insertElement.addAttribute("parameterType", "Map");
         List<F> baseFields = this.getModel().getBaseFields();
-        if (StrUtil.equals(primaryField.getType(), Long.class.getName()) || StrUtil.equals(primaryField.getType(), Integer.class.getName())) {
+        if (StrUtil.equals(primaryField.getJavaTypeName(), Long.class.getName()) || StrUtil.equals(primaryField.getJavaTypeName(), Integer.class.getName())) {
             insertElement.addAttribute("useGeneratedKeys", "true");
             insertElement.addAttribute("keyProperty", primaryField.getName());
             baseFields = baseFields.stream().filter(item -> !item.equals(primaryField)).toList();
@@ -63,7 +63,7 @@ public class GenerateXmlMysql<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         batchInsertElement.addAttribute("id", CommonStaticField.BATCH_SAVE_METHOD_NAME);
         batchInsertElement.addAttribute("parameterType", "List");
         List<F> baseFields = this.getModel().getBaseFields();
-        if (StrUtil.equals(primaryField.getType(), Long.class.getName()) || StrUtil.equals(primaryField.getType(), Integer.class.getName())) {
+        if (StrUtil.equals(primaryField.getJavaTypeName(), Long.class.getName()) || StrUtil.equals(primaryField.getJavaTypeName(), Integer.class.getName())) {
             batchInsertElement.addAttribute("useGeneratedKeys", "true");
             batchInsertElement.addAttribute("keyProperty", primaryField.getName());
             baseFields = baseFields.stream().filter(item -> !item.equals(primaryField)).toList();

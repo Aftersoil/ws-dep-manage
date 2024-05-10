@@ -1,11 +1,12 @@
 package com.ws.enu
 
 enum class JoinCondition {
-    equal,
+    equal, less, great, like;
 
-    less,
-
-    great,
-
-    like;
+    companion object {
+        @JvmStatic
+        fun fromName(name: String): DataBaseType? {
+            return enumValues<DataBaseType>().find { it.name == name }
+        }
+    }
 }

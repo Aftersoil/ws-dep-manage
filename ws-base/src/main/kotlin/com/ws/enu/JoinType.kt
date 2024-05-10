@@ -1,9 +1,12 @@
 package com.ws.enu
 
 enum class JoinType {
-    left,
+    left, right, inner;
 
-    right,
-
-    inner;
+    companion object {
+        @JvmStatic
+        fun fromName(name: String): DataBaseType? {
+            return enumValues<DataBaseType>().find { it.name == name }
+        }
+    }
 }

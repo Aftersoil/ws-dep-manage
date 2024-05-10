@@ -6,6 +6,7 @@ import com.ws.annotation.Join;
 import com.ws.base.model.BaseModel;
 import com.ws.generate.metadata.model.ModelClazzInfo;
 import com.ws.tool.MysqlTypeMapInfo;
+import com.ws.tool.StringUtil;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ public class ColumnFieldInfo extends AbstractColumnInfo<Field, ModelClazzInfo> {
 
     public void initBaseInfo(@NotNull Field metaData, ModelClazzInfo model) {
         this.setName(metaData.getName());
-        this.setType(metaData.getType().getTypeName());
+        this.setJavaTypeName(metaData.getType().getTypeName());
     }
 
     @Override
@@ -39,7 +40,7 @@ public class ColumnFieldInfo extends AbstractColumnInfo<Field, ModelClazzInfo> {
         Column column = metaData.getAnnotation(Column.class);
         if (Objects.nonNull(column)) {
             this.setColumn(column);
-            this.setMybatisJdbcType(MysqlTypeMapInfo.getMybatisType(metaData));
+            this.setJdbcType(this.initJdbcType(metaData, column));
             this.setTitle(column.title());
             this.setComment(column.comment());
             this.setConditions(Arrays.asList(column.conditions()));
@@ -100,6 +101,13 @@ public class ColumnFieldInfo extends AbstractColumnInfo<Field, ModelClazzInfo> {
         } else {
             return new ModelClazzInfo(model.getModuleInfo(), this.getJoin().rightTable(), true);
         }
+    }
+
+    private String initJdbcType(@NotNull Field field, @NotNull Column column) {
+        if (StringUtil.isEmpty(column.jdbcType())) {
+            return MysqlTypeMapInfo.getDbColumnTypeByField(field);
+        }
+        return column.jdbcType();
     }
 
 }

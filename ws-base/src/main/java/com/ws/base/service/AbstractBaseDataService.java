@@ -398,7 +398,7 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
      * @return List<T> T extends BaseModel
      **/
     @Override
-    public List<Map<String, Object>> getList(@NotNull Map<String, Object> map) {
+    public @NotNull List<Map<String, Object>> getList(@NotNull Map<String, Object> map) {
         map = this.listParamFilter(map);
         if (this.listValidate(map)) {
             return this.getMapper()._getList(map);
@@ -412,7 +412,7 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
      * @param model extends BaseModel
      * @return List<T> T extends BaseModel
      **/
-    public List<Map<String, Object>> getList(@NotNull T model) {
+    public @NotNull List<Map<String, Object>> getList(@NotNull T model) {
         return this.getList(model.toMap());
     }
 
@@ -423,7 +423,7 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
      * @param value  value
      * @return List<T> T extends BaseModel
      **/
-    public List<Map<String, Object>> getList(String column, Object value) {
+    public @NotNull List<Map<String, Object>> getList(String column, Object value) {
         Map<String, Object> map = new HashMap<>(1);
         map.put(column, value);
         return this.getList(map);
@@ -435,7 +435,7 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
      * @param keyValues 键值对,偶数长度。key, value, key, value...
      * @return List<Map < String, Object>>
      **/
-    public List<Map<String, Object>> getList(@NotNull Object... keyValues) {
+    public @NotNull List<Map<String, Object>> getList(@NotNull Object... keyValues) {
         Map<String, Object> map = new HashMap<>();
         if (keyValues.length > 0) {
             int length = keyValues.length;
@@ -450,7 +450,7 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
     }
 
     @Override
-    public List<T> getNestList(@NotNull Map<String, Object> map) {
+    public @NotNull List<T> getNestList(@NotNull Map<String, Object> map) {
         map = this.listParamFilter(map);
         if (this.listValidate(map)) {
             return this.getMapper()._getNestList(map);
@@ -458,17 +458,17 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
         throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
     }
 
-    public List<T> getNestList(@NotNull T model) {
+    public @NotNull List<T> getNestList(@NotNull T model) {
         return this.getNestList(model.toMap());
     }
 
-    public List<T> getNestList(String column, Object value) {
+    public @NotNull List<T> getNestList(String column, Object value) {
         Map<String, Object> map = new HashMap<>(1);
         map.put(column, value);
         return this.getNestList(map);
     }
 
-    public List<T> getNestList(@NotNull Object... keyValuesArray) {
+    public @NotNull List<T> getNestList(@NotNull Object... keyValuesArray) {
         if (keyValuesArray.length > 0) {
             Map<String, Object> map = new HashMap<>();
             int length = keyValuesArray.length;

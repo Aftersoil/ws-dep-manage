@@ -3,12 +3,13 @@ package com.ws.generate.metadata.field;
 import com.ws.annotation.Column;
 import com.ws.annotation.Join;
 import com.ws.enu.Condition;
-import com.ws.enu.FieldType;
 import com.ws.enu.JoinCondition;
 import com.ws.enu.JoinType;
 import com.ws.generate.metadata.model.ModelInfo;
+import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
+import java.util.Objects;
 
 @lombok.Data
 public abstract class AbstractColumnInfo<T, M extends ModelInfo<?, ?>> implements ColumnInfo<T, M> {
@@ -16,15 +17,12 @@ public abstract class AbstractColumnInfo<T, M extends ModelInfo<?, ?>> implement
     private T metaData;
     private M model;
     private String name;
-    private String type;
-    private String mybatisJdbcType;
-
-    @Deprecated
-    private FieldType fieldType;
+    private String javaTypeName;
 
     private Column column;
     private String title;
     private String comment;
+    private String jdbcType;
     private List<Condition> conditions;
     private boolean baseField;
     private boolean primaryField;
@@ -57,6 +55,7 @@ public abstract class AbstractColumnInfo<T, M extends ModelInfo<?, ?>> implement
     public void initColumnInfo(T metaData, M model) {
         this.setTitle(ColumnInfo.super.getTitle());
         this.setComment(ColumnInfo.super.getComment());
+        this.setJdbcType(null);
         this.setConditions(ColumnInfo.super.getConditions());
         this.setBaseField(ColumnInfo.super.isBaseField());
         this.setPrimaryField(ColumnInfo.super.isPrimaryField());
