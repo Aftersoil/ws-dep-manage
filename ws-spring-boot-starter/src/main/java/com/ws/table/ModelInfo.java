@@ -9,10 +9,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 
 @lombok.Data
 public abstract class ModelInfo {
+
     private List<Field> fields;
     private List<String> names;
     private Class<?> metadata;
@@ -53,9 +55,8 @@ public abstract class ModelInfo {
     public void initNames(@NotNull Class<?> clazz) {
         Data dataAnnotation = clazz.getAnnotation(Data.class);
         if (Objects.nonNull(dataAnnotation)) {
-            this.setNames(List.of(dataAnnotation.names()));
+            this.setNames(Stream.of(dataAnnotation.names()).map(String::toLowerCase).toList());
         }
-
     }
 
     public String initTableName(@NotNull Class<?> clazz) {
