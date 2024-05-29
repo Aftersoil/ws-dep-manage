@@ -118,9 +118,16 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         org.dom4j.Element resultMapElement = this.createXmlElement("resultMap");
         resultMapElement.addAttribute("id", this.getModel().getModelName());
         resultMapElement.addAttribute("type", this.getModel().getModelFullName());
-        for (F field : this.getModel().getFields()) {
+
+        List<F> tempFields = new ArrayList<>();
+        tempFields.addAll(this.getModel().getBaseFields());
+        tempFields.addAll(this.getModel().getClazzJoinFields());
+        tempFields.addAll(this.getModel().getCollectionJoinFields());
+
+        for (F field : tempFields) {
             resultMapElement.add(this.getFieldResultMap(field));
         }
+
         return resultMapElement;
     }
 
