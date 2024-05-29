@@ -66,7 +66,7 @@ public class ModelClazzInfo extends AbstractModelInfo<Class<? extends BaseModel>
             clazz = clazz.getSuperclass();
         }
         this.setFields(fields);
-        this.setBaseFields(fields.stream().filter(AbstractColumnInfo::isBaseField).sorted((p1, p2) -> Boolean.compare(p1.isPrimaryField(), p2.isPrimaryField())).toList());
+        this.setBaseFields(fields.stream().filter(AbstractColumnInfo::isBaseField).sorted((p1, p2) -> Boolean.compare(p1.isPrimaryField(), p2.isPrimaryField())).toList().reversed());
         this.setJoinFields(fields.stream().filter(AbstractColumnInfo::isJoinField).toList());
         this.setClazzJoinFields(fields.stream().filter(AbstractColumnInfo::isClassJoinField).toList());
         this.setCollectionJoinFields(fields.stream().filter(AbstractColumnInfo::isCollectionJoinField).toList());
