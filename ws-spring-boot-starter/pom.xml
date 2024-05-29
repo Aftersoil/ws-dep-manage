@@ -8,7 +8,7 @@
     <parent>
         <groupId>io.github.wangshu-g</groupId>
         <artifactId>ws-dep-manage</artifactId>
-        <version>1.4.0</version>
+        <version>1.4.1</version>
     </parent>
 
     <artifactId>ws-spring-boot-starter</artifactId>
@@ -28,7 +28,7 @@
         <dependency>
             <groupId>io.github.wangshu-g</groupId>
             <artifactId>ws-base</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.1</version>
         </dependency>
 
         <dependency>

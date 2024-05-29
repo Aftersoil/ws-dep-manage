@@ -29,11 +29,11 @@ public abstract class GenerateTable extends ModelInfo {
 
     public abstract int getDefaultLength(Field field);
 
-    public boolean getDefaultNullFlag(Field field) {
-        return !getPrimaryKeyFlag(field);
+    public boolean isDefaultNull(Field field) {
+        return !isPrimaryKey(field);
     }
 
-    public boolean getPrimaryKeyFlag(@NotNull Field field) {
+    public boolean isPrimaryKey(@NotNull Field field) {
         if (Objects.nonNull(field.getAnnotation(Column.class))) {
             return field.getAnnotation(Column.class).primary() || StrUtil.equals(field.getName(), "id");
         }

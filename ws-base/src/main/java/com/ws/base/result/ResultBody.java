@@ -75,6 +75,11 @@ public class ResultBody<T> implements Serializable {
         return ResultBody.success(data, CommonErrorInfo.SUCCESS.getResultMsg());
     }
 
+    @NotNull
+    public static <T> ResultBody<T> successMsg(String message) {
+        return ResultBody.success(null, message);
+    }
+
     /**
      * <p>成功</p>
      *

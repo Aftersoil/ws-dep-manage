@@ -3,12 +3,14 @@ package com.ws;
 import com.ws.annotation.EnableConfig;
 import com.ws.exception.IExceptionHandler;
 import com.ws.tool.CommonParam;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 
+@Slf4j
 public class ConfigRegister implements ImportBeanDefinitionRegistrar {
 
     @Override

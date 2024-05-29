@@ -46,7 +46,7 @@ public interface ImportExcel<S extends AbstractBaseDataService<? extends BaseDat
         for (MultipartFile multipartFile : fileList) {
             this.getService().importExcel(multipartFile, headerRowNumber);
         }
-        return ResultBody.success("导入成功");
+        return ResultBody.successMsg("导入成功");
     }
 
 }

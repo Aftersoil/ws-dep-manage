@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class ModelClazzInfo extends AbstractModelInfo<Class<? extends BaseModel>
     private void initFields(ModuleInfo moduleInfo, Class<? extends BaseModel> metaData, boolean ignoreJoinFields) {
         Class<?> clazz = metaData;
         List<ColumnFieldInfo> fields = new ArrayList<>();
-        while (clazz != null) {
+        while (Objects.nonNull(clazz)) {
             for (Field field : clazz.getDeclaredFields()) {
                 if (Objects.nonNull(field.getAnnotation(Column.class))) {
                     fields.add(new ColumnFieldInfo(field, this));
@@ -64,6 +65,12 @@ public class ModelClazzInfo extends AbstractModelInfo<Class<? extends BaseModel>
             }
             clazz = clazz.getSuperclass();
         }
+        fields.sort(((o1, o2) -> {
+            if (o1.isPrimaryField() && o2.isPrimaryField()) {
+                return 0;
+            }
+            return o1.isPrimaryField() ? -1 : 1;
+        }));
         this.setFields(fields);
         this.setBaseFields(fields.stream().filter(AbstractColumnInfo::isBaseField).toList());
         this.setJoinFields(fields.stream().filter(AbstractColumnInfo::isJoinField).toList());

@@ -1,6 +1,7 @@
 package com.ws.tool;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -12,9 +13,10 @@ public class StringUtil {
     }
 
     public static boolean isEmpty(Object str) {
-        return (str == null || "null".equals(String.valueOf(str)) || String.valueOf(str).replaceAll(" ", "").isEmpty());
+        return (str == null || "null".equals(String.valueOf(str)) || String.valueOf(str).trim().isEmpty());
     }
 
+    @NotNull
     public static String concat(String... str) {
         if (Objects.isNull(str) || str.length == 0) {
             return "";

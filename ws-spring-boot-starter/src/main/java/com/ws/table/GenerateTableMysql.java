@@ -112,12 +112,12 @@ public class GenerateTableMysql extends GenerateTable {
             String columnName = StringUtil.concat("`", item.getName(), "`");
             int length = this.getDefaultLength(item);
             String columnType = StringUtil.concat(this.getJdbcType(item).toLowerCase(), length == -1 ? "" : StringUtil.concat("(", String.valueOf(length), ")"));
-            boolean defaultNullFlag = this.getDefaultNullFlag(item);
+            boolean defaultNullFlag = this.isDefaultNull(item);
             String columnNull = defaultNullFlag ? "null" : "not null";
-            boolean primaryKeyFlag = this.getPrimaryKeyFlag(item);
+            boolean primaryKeyFlag = this.isPrimaryKey(item);
             String columnAutoIncrement = (primaryKeyFlag && (item.getType().equals(Long.class) || item.getType().equals(Integer.class))) ? "auto_increment" : "";
             String columnComment = StringUtil.concat("comment '", this.getComment(item), "'");
-            String columnPrimary = this.getPrimaryKeyFlag(item) ? "primary key" : "";
+            String columnPrimary = this.isPrimaryKey(item) ? "primary key" : "";
             String columnEnd = index == this.getFields().size() - 1 ? "" : ",";
             sql = StringUtil.concat(sql,
                     columnName, " ",

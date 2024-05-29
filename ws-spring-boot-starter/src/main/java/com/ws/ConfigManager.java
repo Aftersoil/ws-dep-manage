@@ -19,10 +19,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,11 +56,7 @@ public class ConfigManager implements ApplicationContextAware {
             List<String> targetDataSource = List.of(this.enableConfig.targetDataSource());
             Map<String, DataSource> dataSourceMap = applicationContext.getBeansOfType(DataSource.class);
             if (!targetDataSource.contains("*")) {
-                for (Map.Entry<String, DataSource> entry : dataSourceMap.entrySet()) {
-                    if (!targetDataSource.contains(entry.getKey())) {
-                        dataSourceMap.remove(entry.getKey());
-                    }
-                }
+                dataSourceMap.entrySet().removeIf(next -> !targetDataSource.contains(next.getKey()));
             }
             dataSourceMap.forEach((k, v) -> {
                 try (Connection connection = v.getConnection()) {
@@ -87,45 +80,5 @@ public class ConfigManager implements ApplicationContextAware {
             });
         }
     }
-
-//    private @NotNull String getProxyClazzFullName(@NotNull Object obj) {
-//        String name = obj.getClass().getName();
-//        if (name.contains("$$")) {
-//            return name.substring(0, name.indexOf("$$"));
-//        }
-//        return name;
-//    }
-
-//    private void optionalMapper() {
-//        Configuration configuration = sqlSessionFactory.getConfiguration();
-//        Map<String, BaseMapper> mapperBeans = this.applicationContext.getBeansOfType(BaseMapper.class);
-//        for (BaseMapper mapperBean : mapperBeans.values()) {
-//            if (mapperBean instanceof OptionalMapper<?>) {
-//                Class<?> mapperClazz = mapperBean.getClass().getInterfaces()[0];
-//                Class<? extends BaseModel> mapperModel = getMapperModel(mapperClazz);
-//                MappedStatement.Builder executeSqlMappedStatement = getExecuteSqlMappedStatement(mapperClazz, configuration);
-//                MappedStatement.Builder sqlSaveMappedStatement = getSqlSaveMappedStatement(mapperClazz, configuration);
-//                configuration.addMappedStatement(executeSqlMappedStatement.build());
-//                configuration.addMappedStatement(sqlSaveMappedStatement.build());
-//            }
-//        }
-//    }
-//
-//    public MappedStatement.Builder getExecuteSqlMappedStatement(Class<?> mapperClazz, Configuration configuration) {
-//        String id = StringUtil.concat(mapperClazz.getName(), ".", OptionalMethod.executeSql.name());
-//        SqlSource sqlSource = parameterObject -> new BoundSql(configuration, (String) parameterObject, List.of(), parameterObject);
-//        return new MappedStatement.Builder(configuration, id, sqlSource, SqlCommandType.SELECT);
-//    }
-//
-//    public MappedStatement.Builder getSqlSaveMappedStatement(Class<?> mapperClazz, Configuration configuration) {
-//        String id = StringUtil.concat(mapperClazz.getName(), ".", OptionalMethod.sqlSave.name());
-//        SqlSource sqlSource = new SqlSource() {
-//            @Override
-//            public BoundSql getBoundSql(Object parameterObject) {
-//                return new BoundSql(configuration, (String) parameterObject, List.of(), parameterObject);
-//            }
-//        };
-//        return new MappedStatement.Builder(configuration, id, sqlSource, SqlCommandType.INSERT);
-//    }
 
 }

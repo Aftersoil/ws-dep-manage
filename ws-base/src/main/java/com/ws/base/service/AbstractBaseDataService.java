@@ -85,7 +85,8 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
         T model;
         try {
             model = this.getModelClazz().getConstructor().newInstance();
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+                 IllegalAccessException e) {
             log.error("获取实体类实例失败,请检查泛型", e);
             throw new IException(CommonErrorInfo.SERVER_ERROR);
         }
@@ -232,11 +233,16 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int update(String id, @NotNull String column1, Object param1) {
-        Map<String, Object> map = new HashMap<>(1);
-        map.put("id", id);
+    public int update(String id, @NotNull String column1, Object newValue) {
+        Map<String, Object> map = new HashMap<>();
+        Field modelPrimaryField = this.getModelPrimaryField();
+        if (Objects.isNull(modelPrimaryField)) {
+            log.error("实体类需要指定主键字段");
+            throw new IException(CommonErrorInfo.SERVER_ERROR);
+        }
+        map.put(modelPrimaryField.getName(), id);
         if (!column1.startsWith("new")) {
-            map.put(StringUtil.concat("new", StrUtil.upperFirst(column1)), param1);
+            map.put(StringUtil.concat("new", StrUtil.upperFirst(column1)), newValue);
         }
         return this.update(map);
     }
@@ -250,15 +256,20 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
      **/
     @Transactional(rollbackFor = Exception.class)
     public int update(@NotNull T model) {
+        Field modelPrimaryField = this.getModelPrimaryField();
+        if (Objects.isNull(modelPrimaryField)) {
+            log.error("实体类需要指定主键字段");
+            throw new IException(CommonErrorInfo.SERVER_ERROR);
+        }
+        Object primaryValue = model.modelAnyValueByFieldName(modelPrimaryField.getName());
+        if (StringUtil.isEmpty(primaryValue)) {
+            log.error("使用实体类更新时主键字段不能为空!");
+            throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
+        }
         Map<String, Object> param = new HashMap<>();
         Map<String, Object> temp = model.toMap();
         temp.forEach((k, v) -> param.put(StringUtil.concat("new", StrUtil.upperFirst(k)), v));
-        Object id = model.modelAnyValueByFieldName("id");
-        if (StringUtil.isEmpty(id)) {
-            param.putAll(temp);
-        } else {
-            param.put("id", id);
-        }
+        param.put(modelPrimaryField.getName(), primaryValue);
         log.warn("实体类更新.为了防止更新参数和条件参数冲突,参数强制修改为: {}", param);
         return this.update(param);
     }

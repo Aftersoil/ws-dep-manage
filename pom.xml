@@ -13,7 +13,7 @@
 
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-dep-manage</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 
     <packaging>pom</packaging>
 
@@ -21,7 +21,6 @@
         <module>ws-base</module>
         <module>ws-spring-boot-starter</module>
         <module>ws-generate</module>
-        <module>ws-generate-compile-time</module>
     </modules>
 
     <url>https://github.com/wangshu-g/ws-dep-manage</url>
@@ -111,9 +110,7 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <source>src/main/java</source>
                                 <source>src/main/kotlin</source>
-                                <source>target/generated-sources/annotations</source>
                             </sourceDirs>
                         </configuration>
                     </execution>
@@ -137,6 +134,30 @@
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.central</groupId>
