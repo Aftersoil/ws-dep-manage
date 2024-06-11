@@ -106,7 +106,7 @@ public class GenerateTableMysql extends GenerateTable {
     }
 
     public String generateCreateTable(String tableName) {
-        String sql = StringUtil.concat("create table ", tableName, " ( ");
+        String sql = StringUtil.concat("create table `", tableName, "` ( ");
         for (int index = 0; index < this.getFields().size(); index++) {
             Field item = this.getFields().get(index);
             String columnName = StringUtil.concat("`", item.getName(), "`");
@@ -135,16 +135,16 @@ public class GenerateTableMysql extends GenerateTable {
 
     public String generateAddColumn(String tableName, String columnName, String columnJdbcType, int columnLength) {
         return StringUtil.concat(
-                "alter table ", tableName,
-                " add `", columnName, "` ",
+                "alter table `", tableName,
+                "` add `", columnName, "` ",
                 columnJdbcType, columnLength == -1 ? "" : StringUtil.concat("(", String.valueOf(columnLength), ")")
         );
     }
 
     public String generateAlterColumn(String tableName, String columnName, String columnJdbcType, int columnLength) {
         return StringUtil.concat(
-                "alter table ", tableName,
-                " modify `", columnName, "` ",
+                "alter table `", tableName,
+                "` modify `", columnName, "` ",
                 columnJdbcType, columnLength == -1 ? "" : StringUtil.concat("(", String.valueOf(columnLength), ")")
         );
     }

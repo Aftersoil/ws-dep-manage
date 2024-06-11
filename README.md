@@ -4,7 +4,7 @@
 
 ## [Aftersoil](https://github.com/Aftersoil)
 
-## [https://github.com/wangshu-g/ws-dep-manage](https://github.com/wangshu-g/ws-dep-manage)
+## [https://github.com/Aftersoil/ws-dep-manage](https://github.com/Aftersoil/ws-dep-manage)
 
 </center>
 
@@ -18,7 +18,7 @@
 
 相关功能、使用参考 [该模板仓库代码](https://github.com/wangshu-g/ws-generate-test-example)
 
-可以使用ws-generate模块手动生成、[该网站](https://www.望舒.com)网站上传生成、[该IDEA插件](https://plugins.jetbrains.com/embeddable/install/23060) 插件上传生成
+可以使用ws-generate模块生成、也可在[该网站](https://www.望舒.com)免费上传生成、[该IDEA插件](https://plugins.jetbrains.com/embeddable/install/23060) 插件免费上传生成
 
 网站可以配置一些前端表单、页面模板代码，对前端做了一些基本扩展
 
@@ -29,24 +29,26 @@
 ### maven 依赖
 
 ``` xml
+
+<!--全部迁移至maven公共仓库，原先的github packages不再使用-->
 <!--基本功能-->
-<pomDependency>
+<dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-base</artifactId>
-    <version>1.2.0</version>
-</pomDependency>
+    <version>1.4.1</version>
+</dependency>
 
 <!--可选-->
-<pomDependency>
+<dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-spring-boot-starter</artifactId>
-    <version>1.2.0</version>
-</pomDependency>
+    <version>1.4.1</version>
+</dependency>
 
 <!--可选-->
-<pomDependency>
+<dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-generate</artifactId>
-    <version>1.2.0</version>
-</pomDependency>
+    <version>1.4.1</version>
+</dependency>
 ```

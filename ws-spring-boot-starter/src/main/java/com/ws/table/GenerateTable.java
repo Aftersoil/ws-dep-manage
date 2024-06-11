@@ -35,7 +35,7 @@ public abstract class GenerateTable extends ModelInfo {
 
     public boolean isPrimaryKey(@NotNull Field field) {
         if (Objects.nonNull(field.getAnnotation(Column.class))) {
-            return field.getAnnotation(Column.class).primary() || StrUtil.equals(field.getName(), "id");
+            return field.getAnnotation(Column.class).primary();
         }
         return StrUtil.equals(field.getName(), "id");
     }
