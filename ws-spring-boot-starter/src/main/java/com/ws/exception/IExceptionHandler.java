@@ -23,7 +23,7 @@ public class IExceptionHandler {
     public String iExceptionHandler(IException e) {
         log.error("错误接口: {}", Objects.requireNonNull(CommonParam.getRequest()).getServletPath());
         log.error("错误信息", e);
-        return ResultBody.error(e.getErrorCode(), e.getMessage()).toJsonyMdHms();
+        return ResultBody.error(e.getErrorCode(), e.getMessage()).toJson();
     }
 
     @ExceptionHandler(Exception.class)
@@ -34,7 +34,7 @@ public class IExceptionHandler {
         if (e instanceof ErrorResponse errorResponse) {
             return ResultBody.error(String.valueOf(errorResponse.getStatusCode().value()), e.getMessage()).toJsonyMdHms();
         }
-        return ResultBody.error(CommonErrorInfo.SERVER_ERROR).toJsonyMdHms();
+        return ResultBody.error(CommonErrorInfo.SERVER_ERROR).toJson();
     }
 
 }

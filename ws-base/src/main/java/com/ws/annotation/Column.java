@@ -43,4 +43,6 @@ public @interface Column {
      **/
     Condition[] conditions() default {Condition.equal};
 
+    boolean enableFullText() default false;
+
 }

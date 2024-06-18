@@ -2,7 +2,7 @@ package com.ws.base.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.ws.annotation.Column;
 import com.ws.annotation.Data;
 import com.ws.base.controller.daoru.ModelDataListener;

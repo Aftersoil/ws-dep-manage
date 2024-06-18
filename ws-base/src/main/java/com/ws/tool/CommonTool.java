@@ -110,6 +110,18 @@ public class CommonTool {
         return fields;
     }
 
+    public static @Nullable Field getClazzFieldByName(@NotNull Class<?> clazz, @NotNull String fieldName) {
+        Field field = null;
+        while (clazz != null && field == null) {
+            try {
+                field = clazz.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException ignore) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        return field;
+    }
+
     public static <T> Field getField(@NotNull Function<T, ?> function) {
         Method writeReplaceMethod;
         try {

@@ -3,7 +3,7 @@ package com.ws.tool;
 import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.ws.enu.CommonErrorInfo;
 import com.ws.exception.IException;
 import jakarta.servlet.http.HttpServletRequest;

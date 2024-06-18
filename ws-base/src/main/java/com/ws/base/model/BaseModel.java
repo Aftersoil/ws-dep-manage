@@ -1,8 +1,9 @@
 package com.ws.base.model;
 
 import cn.hutool.core.convert.Convert;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.*;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson2.filter.ValueFilter;
 import com.ws.annotation.Column;
 import com.ws.tool.CacheTool;
 import com.ws.tool.RequestUtil;
@@ -13,7 +14,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -103,7 +107,7 @@ public class BaseModel implements Serializable {
      * @param request 请求
      * @return Map<String, Object> 请求参数
      **/
-    public Map<String, Object> setModelValuesFromRequestBodyParam(HttpServletRequest request) throws IOException {
+    public Map<String, Object> setModelValuesFromRequestBodyParam(HttpServletRequest request) {
         return RequestUtil.getRequestParams(request);
     }
 
@@ -125,42 +129,32 @@ public class BaseModel implements Serializable {
         return JSON.toJSONString(this);
     }
 
-    public String toJson(SerializerFeature... features) {
+    public String toJson(JSONWriter.Context context) {
+        return JSON.toJSONString(this, context);
+    }
+
+    public String toJson(JSONWriter.Feature... features) {
         return JSON.toJSONString(this, features);
     }
 
-    public String toJson(ValueFilter filter, SerializerFeature... features) {
+    public String toJson(ValueFilter filter, JSONWriter.Feature... features) {
         return JSON.toJSONString(this, filter, features);
     }
 
-    public String toJson(SerializeConfig serializeConfig, SerializerFeature... features) {
-        return JSON.toJSONString(this, serializeConfig, features);
+    public String toJson(ValueFilter[] filters, JSONWriter.Feature... features) {
+        return JSON.toJSONString(this, filters, features);
     }
 
-    public String toJson(SerializeConfig serializeConfig, SerializeFilter filter, SerializerFeature... features) {
-        return this.toJson(serializeConfig, new SerializeFilter[]{filter}, features);
+    public String toJson(String format, JSONWriter.Feature[] features) {
+        return JSON.toJSONString(this, format, features);
     }
 
-    public String toJson(SerializeConfig serializeConfig, SerializeFilter[] filter, SerializerFeature... features) {
-        return JSON.toJSONString(this, serializeConfig, filter, features);
+    public String toJson(String format, ValueFilter[] filters, JSONWriter.Feature[] features) {
+        return JSON.toJSONString(this, format, filters, features);
     }
 
     public String toJsonDateFormat(String format) {
-        SerializeConfig serializeConfig = new SerializeConfig();
-        serializeConfig.put(Date.class, new SimpleDateFormatSerializer(format));
-        return this.toJson(serializeConfig);
-    }
-
-    public String toJsonDateFormat(String format, SerializerFeature... features) {
-        SerializeConfig serializeConfig = new SerializeConfig();
-        serializeConfig.put(Date.class, new SimpleDateFormatSerializer(format));
-        return this.toJson(serializeConfig, features);
-    }
-
-    public String toJsonDateFormat(String format, ValueFilter filter, SerializerFeature... features) {
-        SerializeConfig serializeConfig = new SerializeConfig();
-        serializeConfig.put(Date.class, new SimpleDateFormatSerializer(format));
-        return this.toJson(serializeConfig, filter, features);
+        return this.toJson(format, null);
     }
 
     public String toJsonyMdHms() {
