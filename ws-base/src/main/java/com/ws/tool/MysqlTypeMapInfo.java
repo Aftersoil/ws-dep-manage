@@ -18,7 +18,7 @@ public class MysqlTypeMapInfo {
     private static final Map<String, JdbcType> DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE = new HashMap<>();
 
     static {
-        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Integer.class.getName(), "INTEGER");
+        JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Integer.class.getName(), "INT");
         JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Long.class.getName(), "BIGINT");
         JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Short.class.getName(), "SMALLINT");
         JAVA_TYPE_NAME_MAP_DB_COLUMN_TYPE.put(Float.class.getName(), "FLOAT");
@@ -96,7 +96,7 @@ public class MysqlTypeMapInfo {
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("LONGTEXT", JdbcType.LONGNVARCHAR);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("NUMERIC", JdbcType.NUMERIC);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("DECIMAL", JdbcType.DECIMAL);
-        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("INTEGER", JdbcType.INTEGER);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("INT", JdbcType.INTEGER);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("SMALLINT", JdbcType.SMALLINT);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("BIGINT", JdbcType.BIGINT);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("REAL", JdbcType.REAL);
