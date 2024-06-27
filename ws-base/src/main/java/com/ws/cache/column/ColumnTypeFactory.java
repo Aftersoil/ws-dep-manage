@@ -31,7 +31,8 @@ public class ColumnTypeFactory {
         if (Objects.nonNull(clazz)) {
             try {
                 return clazz.getDeclaredConstructor(Field.class).newInstance(field);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
         }

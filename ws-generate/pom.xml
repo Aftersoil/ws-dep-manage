@@ -13,6 +13,13 @@
 
     <artifactId>ws-generate</artifactId>
 
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <developers>
         <developer>
             <name>wangshu-g</name>
@@ -22,6 +29,12 @@
             <organizationUrl>https://github.com/Aftersoil</organizationUrl>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/Aftersoil/ws-dep-manage.git</connection>
+        <developerConnection>scm:git:https://github.com/Aftersoil/ws-dep-manage.git</developerConnection>
+        <url>https://github.com/Aftersoil/ws-dep-manage</url>
+    </scm>
 
     <dependencies>
 

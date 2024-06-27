@@ -16,7 +16,7 @@ import com.ws.base.service.AbstractBaseDataService;
  * @author GSF
  * <p>基础控制器,所有方法响应数据{@link com.ws.base.result.ResultBody}包装后的JSON字符串数据</p>
  */
-public abstract class AbstractBaseDataControllerString<S extends AbstractBaseDataService<? extends BaseDataMapper<T>, T>, T extends BaseModel> extends AbstractBaseDataController<S, T> implements Save<S, T>, Delete<S, T>, Update<S, T>, Select<S, T>, List<S, T>, NestList<S, T>, ExportExcel<S, T>, ImportExcel<S, T> {
+public abstract class AbstractBaseDataControllerString<S extends AbstractBaseDataService<?, ? extends BaseDataMapper<T>, T>, T extends BaseModel> extends AbstractBaseDataController<S, T> implements Save<S, T>, Delete<S, T>, Update<S, T>, Select<S, T>, List<S, T>, NestList<S, T>, ExportExcel<S, T>, ImportExcel<S, T> {
 
 
 }

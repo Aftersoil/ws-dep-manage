@@ -62,8 +62,10 @@ public interface ColumnInfo<T, M extends ModelInfo<?, ?>> extends Column {
     default @NotNull JdbcType getMybatisJdbcType() {
         JdbcType mybatisJdbcType;
         switch (this.getModel().getDataBaseType()) {
-            case DataBaseType.mysql -> mybatisJdbcType = MysqlTypeMapInfo.getMybatisJdbcTypeByDbColumnType(this.getJdbcType());
-            case DataBaseType.oracle, DataBaseType.sqlServer -> throw new IllegalArgumentException("暂无对应数据库类型实现");
+            case DataBaseType.mysql ->
+                    mybatisJdbcType = MysqlTypeMapInfo.getMybatisJdbcTypeByDbColumnType(this.getJdbcType());
+            case DataBaseType.oracle, DataBaseType.sqlServer ->
+                    throw new IllegalArgumentException("暂无对应数据库类型实现");
             default -> throw new IllegalArgumentException("没有匹配的数据库类型");
         }
         return mybatisJdbcType;

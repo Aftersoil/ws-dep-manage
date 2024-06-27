@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public abstract class AbstractBaseDataController<S extends AbstractBaseDataService<? extends BaseDataMapper<T>, T>, T extends BaseModel> implements BaseDataController<S, T> {
+public abstract class AbstractBaseDataController<S extends AbstractBaseDataService<?, ? extends BaseDataMapper<T>, T>, T extends BaseModel> implements BaseDataController<S, T> {
 
     public final Logger log = LoggerFactory.getLogger(this.getClass());
 

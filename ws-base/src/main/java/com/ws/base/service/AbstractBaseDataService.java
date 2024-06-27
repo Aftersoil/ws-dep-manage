@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @author GSF
  * <p>AbstractBaseDataService implements BaseService</p>
  */
-public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T extends BaseModel> implements BaseDataService<M, T> {
+public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T extends BaseModel> implements BaseDataService<M, T> {
 
     public Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -48,9 +48,6 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
 
     /**
      * <p>保存</p>
-     * <p>如果转更新,防止更新参数和条件参数冲突,强制将所有参数添加new{列名}作为新值,并且只会保留id作为唯一更新条件</p>
-     * <p>当然更新还是建议老老实实使用update去更,一是即使不存在大部分情况不会造成很大损失,二是使用这个会多一次查询验证</p>
-     * <p>再提一下,前端调用save更新时,不需要使用new{列名}作为参数,因为save最终调用的是save(T model),你使用new{列名}作为参数在转换为实体类的时候参数会被过滤掉.总之还是老老实实调用update</p>
      *
      * @param model extends {@link BaseModel}
      * @return BaseModel
@@ -186,7 +183,11 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
      * @return int
      **/
     @Transactional(rollbackFor = Exception.class)
-    public int delete(String id) {
+    public int delete(P id) {
+        if (StringUtil.isEmpty(id)) {
+            log.error("根据主键字段删除时主键字段不能为空!");
+            throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
+        }
         Map<String, Object> map = new HashMap<>(1);
         Field modelPrimaryField = this.getModelPrimaryField();
         if (Objects.isNull(modelPrimaryField)) {
@@ -270,7 +271,7 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
         Map<String, Object> temp = model.toMap();
         temp.forEach((k, v) -> param.put(StringUtil.concat("new", StrUtil.upperFirst(k)), v));
         param.put(modelPrimaryField.getName(), primaryValue);
-        log.warn("实体类更新.为了防止更新参数和条件参数冲突,参数强制修改为: {}", param);
+        log.warn("实体类更新.防止更新参数和条件参数冲突,参数强制修改为: {}", param);
         return this.update(param);
     }
 
@@ -287,7 +288,7 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
     }
 
     /**
-     * <p>更新参数过滤,这里的new是为了防止更新条件和更新值参数冲突,只有更新操作强制这样做(有更好方案可重写替换)</p>
+     * <p>更新参数过滤,这里的new是防止更新条件和更新值参数冲突,只有更新操作强制这样做(有更好方案可重写替换)</p>
      *
      * @param map {columnName : value}
      * @return Map<String, Object>
@@ -366,12 +367,18 @@ public abstract class AbstractBaseDataService<M extends BaseDataMapper<T>, T ext
      * @param id id
      * @return T extends BaseModel
      **/
-    public @Nullable T select(String id) {
+    public @Nullable T select(P id) {
         if (StringUtil.isEmpty(id)) {
-            return null;
+            log.error("根据主键字段查询时主键字段不能为空!");
+            throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
         }
-        Map<String, Object> map = new HashMap<>(1);
-        map.put("id", id);
+        Map<String, Object> map = new HashMap<>();
+        Field modelPrimaryField = this.getModelPrimaryField();
+        if (Objects.isNull(modelPrimaryField)) {
+            log.error("实体类需要指定主键字段");
+            throw new IException(CommonErrorInfo.SERVER_ERROR);
+        }
+        map.put(modelPrimaryField.getName(), id);
         return this.select(map);
     }
 

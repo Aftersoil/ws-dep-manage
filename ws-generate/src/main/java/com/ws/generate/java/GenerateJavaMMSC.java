@@ -139,7 +139,13 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     }
 
     public TypeSpec generateServiceClass() {
-        ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(AbstractBaseDataService.class, BaseDataMapper.class, BaseModel.class);
+        Class<?> primaryFieldClazz;
+        try {
+            primaryFieldClazz = Class.forName(this.getModel().getPrimaryField().getJavaTypeName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(AbstractBaseDataService.class, primaryFieldClazz, BaseDataMapper.class, BaseModel.class);
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.getModel().getServiceName()).addModifiers(Modifier.PUBLIC).superclass(parameterizedTypeName);
 
         String mapper = StringUtil.concat(this.getModel().getMapperName().substring(0, 1).toLowerCase(), this.getModel().getMapperName().substring(1));

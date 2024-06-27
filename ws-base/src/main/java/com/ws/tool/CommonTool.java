@@ -23,10 +23,10 @@ public class CommonTool {
             return null;
         }
         List<Type> actualTypeArguments = List.of(((ParameterizedType) type).getActualTypeArguments());
-        if (actualTypeArguments.size() < 2) {
+        if (actualTypeArguments.size() < 3) {
             return null;
         }
-        return (Class<? extends BaseModel>) actualTypeArguments.get(1);
+        return (Class<? extends BaseModel>) actualTypeArguments.get(2);
     }
 
     @SuppressWarnings("unchecked")
@@ -39,10 +39,10 @@ public class CommonTool {
             return null;
         }
         List<Type> actualTypeArguments = List.of(((ParameterizedType) type).getActualTypeArguments());
-        if (actualTypeArguments.size() < 2) {
+        if (actualTypeArguments.size() < 3) {
             return null;
         }
-        return (Class<? extends BaseDataMapper<? extends BaseModel>>) actualTypeArguments.getFirst();
+        return (Class<? extends BaseDataMapper<? extends BaseModel>>) actualTypeArguments.get(1);
     }
 
     @SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class CommonTool {
     }
 
     @SuppressWarnings("unchecked")
-    public static @Nullable Class<? extends AbstractBaseDataService<? extends BaseDataMapper<? extends BaseModel>, ? extends BaseModel>> getControllerService(@NotNull Class<?> clazz) {
+    public static @Nullable Class<? extends AbstractBaseDataService<?, ? extends BaseDataMapper<? extends BaseModel>, ? extends BaseModel>> getControllerService(@NotNull Class<?> clazz) {
         Type type = clazz.getGenericSuperclass();
         while (Objects.nonNull(type) && !(type instanceof ParameterizedType)) {
             type = ((Class<?>) type).getGenericSuperclass();
@@ -74,7 +74,7 @@ public class CommonTool {
         if (actualTypeArguments.size() < 2) {
             return null;
         }
-        return (Class<? extends AbstractBaseDataService<? extends BaseDataMapper<? extends BaseModel>, ? extends BaseModel>>) actualTypeArguments.getFirst();
+        return (Class<? extends AbstractBaseDataService<?, ? extends BaseDataMapper<? extends BaseModel>, ? extends BaseModel>>) actualTypeArguments.getFirst();
     }
 
     @SuppressWarnings("unchecked")

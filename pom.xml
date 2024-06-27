@@ -21,9 +21,17 @@
         <module>ws-base</module>
         <module>ws-spring-boot-starter</module>
         <module>ws-generate</module>
+        <module>ws-generate-compile-time</module>
     </modules>
 
     <url>https://github.com/wangshu-g/ws-dep-manage</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -34,6 +42,12 @@
             <organizationUrl>https://github.com/Aftersoil</organizationUrl>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/Aftersoil/ws-dep-manage.git</connection>
+        <developerConnection>scm:git:https://github.com/Aftersoil/ws-dep-manage.git</developerConnection>
+        <url>https://github.com/Aftersoil/ws-dep-manage</url>
+    </scm>
 
     <properties>
         <java.version>21</java.version>

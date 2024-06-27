@@ -6,10 +6,8 @@ import com.ws.enu.Condition;
 import com.ws.enu.JoinCondition;
 import com.ws.enu.JoinType;
 import com.ws.generate.metadata.model.ModelInfo;
-import org.apache.ibatis.type.JdbcType;
 
 import java.util.List;
-import java.util.Objects;
 
 @lombok.Data
 public abstract class AbstractColumnInfo<T, M extends ModelInfo<?, ?>> implements ColumnInfo<T, M> {

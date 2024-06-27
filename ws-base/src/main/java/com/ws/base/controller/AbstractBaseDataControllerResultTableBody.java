@@ -16,6 +16,6 @@ import com.ws.base.service.AbstractBaseDataService;
  * @author GSF
  * <p>BaseControllerImpl</p>
  */
-public abstract class AbstractBaseDataControllerResultTableBody<S extends AbstractBaseDataService<? extends BaseDataMapper<T>, T>, T extends BaseModel> implements SaveResultBody<S, T>, DeleteResultBody<S, T>, UpdateResultBody<S, T>, SelectResultBody<S, T>, ListTableResultTableBody<S, T>, NestListResultTableBody<S, T>, ExportExcel<S, T>, ImportExcel<S, T> {
+public abstract class AbstractBaseDataControllerResultTableBody<S extends AbstractBaseDataService<?, ? extends BaseDataMapper<T>, T>, T extends BaseModel> implements SaveResultBody<S, T>, DeleteResultBody<S, T>, UpdateResultBody<S, T>, SelectResultBody<S, T>, ListTableResultTableBody<S, T>, NestListResultTableBody<S, T>, ExportExcel<S, T>, ImportExcel<S, T> {
 
 }
