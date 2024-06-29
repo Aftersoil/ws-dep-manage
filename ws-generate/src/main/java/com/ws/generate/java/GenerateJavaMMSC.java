@@ -20,6 +20,7 @@ import com.ws.tool.GenerateJavaUtil;
 import com.ws.tool.StringUtil;
 import jakarta.annotation.Resource;
 import lombok.EqualsAndHashCode;
+import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
@@ -138,13 +139,10 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         return typeSpec.build();
     }
 
+    @SneakyThrows
     public TypeSpec generateServiceClass() {
-        Class<?> primaryFieldClazz;
-        try {
-            primaryFieldClazz = Class.forName(this.getModel().getPrimaryField().getJavaTypeName());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        Class<?> primaryFieldClazz = Class.forName(this.getModel().getPrimaryField().getJavaTypeName());
+
         ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(AbstractBaseDataService.class, primaryFieldClazz, BaseDataMapper.class, BaseModel.class);
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.getModel().getServiceName()).addModifiers(Modifier.PUBLIC).superclass(parameterizedTypeName);
 

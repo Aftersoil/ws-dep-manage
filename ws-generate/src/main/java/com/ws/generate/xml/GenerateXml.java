@@ -327,7 +327,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         totalElement.addAttribute("parameterType", "Map");
         totalElement.addAttribute("resultType", Integer.class.getSimpleName());
         totalElement.addText(CommonStaticField.WRAP);
-        totalElement.addText(StringUtil.concat("select count(", this.getBackQuoteStr(this.getModel().getTableName()), ".", this.getBackQuoteStr("id"), ") from ", this.getBackQuoteStr(this.getModel().getTableName())));
+        totalElement.addText(StringUtil.concat("select count(", this.getBackQuoteStr(this.getModel().getTableName()), ".", this.getBackQuoteStr(this.getModel().getPrimaryField().getName()), ") from ", this.getBackQuoteStr(this.getModel().getTableName())));
         totalElement.addText(CommonStaticField.WRAP);
 
         List<F> joinFields = new ArrayList<>();

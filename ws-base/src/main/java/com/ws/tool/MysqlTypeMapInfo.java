@@ -41,6 +41,7 @@ public class MysqlTypeMapInfo {
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("DOUBLE", Double.class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("CHAR", Character.class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("VARCHAR", String.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("MEDIUMTEXT", String.class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("LONGTEXT", String.class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("TEXT", String.class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("ENUM", String.class.getName());
@@ -50,6 +51,7 @@ public class MysqlTypeMapInfo {
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("TIMESTAMP", Date.class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("DATETIME", Date.class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("DATE", Date.class.getName());
+        DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("MEDIUMBLOB", Byte[].class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("BLOB", Byte[].class.getName());
         DB_COLUMN_TYPE_MAP_JAVA_TYPE_NAME.put("VARBINARY", Byte[].class.getName());
     }
@@ -94,6 +96,7 @@ public class MysqlTypeMapInfo {
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("CHAR", JdbcType.CHAR);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("VARCHAR", JdbcType.VARCHAR);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("LONGTEXT", JdbcType.LONGNVARCHAR);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("MEDIUMTEXT", JdbcType.LONGNVARCHAR);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("NUMERIC", JdbcType.NUMERIC);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("DECIMAL", JdbcType.DECIMAL);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("INT", JdbcType.INTEGER);
@@ -106,6 +109,7 @@ public class MysqlTypeMapInfo {
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("TIME", JdbcType.TIME);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("TIMESTAMP", JdbcType.TIMESTAMP);
         DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("BOOLEAN", JdbcType.BOOLEAN);
+        DB_COLUMN_TYPE_MAP_MYBATIS_JDBC_TYPE.put("BLOB", JdbcType.BLOB);
     }
 
     @NotNull
