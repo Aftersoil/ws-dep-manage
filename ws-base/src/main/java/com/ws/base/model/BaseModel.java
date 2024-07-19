@@ -11,7 +11,6 @@ import com.ws.tool.StringUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -85,7 +84,7 @@ public class BaseModel implements Serializable {
         }
     }
 
-    public void setModelValuesFromRequest(HttpServletRequest request) throws IOException {
+    public void setModelValuesFromRequest(HttpServletRequest request) {
         this.setModelValuesFromMapByFieldName(this.setModelValuesFromRequestBodyParam(request));
     }
 

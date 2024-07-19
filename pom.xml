@@ -21,6 +21,7 @@
         <module>ws-base</module>
         <module>ws-spring-boot-starter</module>
         <module>ws-generate</module>
+        <module>ws-generate-compile-time</module>
     </modules>
 
     <url>https://github.com/wangshu-g/ws-dep-manage</url>
