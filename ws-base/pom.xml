@@ -8,7 +8,7 @@
     <parent>
         <groupId>io.github.wangshu-g</groupId>
         <artifactId>ws-dep-manage</artifactId>
-        <version>1.4.2</version>
+        <version>1.4.3</version>
     </parent>
 
     <artifactId>ws-base</artifactId>
