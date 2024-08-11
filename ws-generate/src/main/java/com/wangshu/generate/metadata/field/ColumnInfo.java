@@ -126,6 +126,13 @@ public interface ColumnInfo<T, M extends ModelInfo<?, ?>> extends Column {
         return null;
     }
 
+    default String getIndirectJoinField() {
+        if (this.isJoinField()) {
+            return this.getJoin().indirectJoinField();
+        }
+        return null;
+    }
+
     default JoinType getJoinType() {
         if (this.isJoinField()) {
             return this.getJoin().joinType();

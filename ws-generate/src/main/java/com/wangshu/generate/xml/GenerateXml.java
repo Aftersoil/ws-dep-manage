@@ -415,16 +415,20 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
     public String getJoinRightTableAsName(@NotNull F joinField) {
         T leftModel = joinField.getLeftModel();
         T rightModel = joinField.getRightModel();
-//        rightTable是当前类
-        if (StrUtil.equals(this.getModel().getModelName(), rightModel.getModelName())) {
+        if (StringUtil.isEmpty(joinField.getIndirectJoinField()) && StrUtil.equals(rightModel.getModelName(), this.getModel().getModelName())) {
             return rightModel.getTableName();
+        } else {
+//            存在间接关联
+            List<F> list = this.getModel().getClazzJoinFields().stream().filter(item -> StrUtil.equals(item.getLeftModel().getModelName(), rightModel.getModelName())).toList();
+            if (list.isEmpty()) {
+                list = this.getModel().getCollectionJoinFields().stream().filter(item -> StrUtil.equals(item.getLeftModel().getModelName(), item.getLeftModel().getModelFullName())).toList();
+            }
+            if (StringUtil.isEmpty(joinField.getIndirectJoinField())) {
+                return this.getJoinLeftTableAsName(list.getFirst());
+            } else {
+                return this.getJoinLeftTableAsName(list.stream().collect(Collectors.toMap(k -> k.getName(), v -> v)).get(joinField.getIndirectJoinField()));
+            }
         }
-//        rightTable不是当前类,查找当前类中关联字段的关联类型和rightTable相同的字段
-        List<F> list = this.getModel().getClazzJoinFields().stream().filter(item -> StrUtil.equals(item.getLeftModel().getModelName(), rightModel.getModelName())).toList();
-        if (list.isEmpty()) {
-            list = this.getModel().getCollectionJoinFields().stream().filter(item -> StrUtil.equals(item.getLeftModel().getModelName(), item.getLeftModel().getModelFullName())).toList();
-        }
-        return this.getJoinLeftTableAsName(list.getFirst());
     }
 
     public String getFieldsJoinText(@NotNull List<F> fields) {

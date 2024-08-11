@@ -299,7 +299,7 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     public String generateControllerCode() {
         TypeSpec controller = this.generateControllerClass();
         try {
-            String controllerCode = GenerateJavaUtil.getJavaCode(this.getModel().getControllerFullName(), controller).replaceAll(StringUtil.concat("package ", this.getModel().getControllerFullName()), StringUtil.concat("package ", this.getModel().getControllerPackageName())).replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName()).replaceAll(BASE_DATA_SERVICE_IMPL_PACKAGE_NAME, this.getModel().getServiceFullName()).replaceAll(BASE_DATA_SERVICE_IMPL_CLAZZ_SIMPLE_NAME, this.getModel().getServiceName()).replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
+            String controllerCode = GenerateJavaUtil.getJavaCode(this.getModel().getControllerFullName(), controller).replaceAll(StringUtil.concat("package ", this.getModel().getControllerFullName()), StringUtil.concat("package ", this.getModel().getControllerPackageName())).replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName()).replaceAll(BASE_DATA_SERVICE_PACKAGE_NAME, this.getModel().getServiceFullName()).replaceAll(BASE_DATA_SERVICE_CLAZZ_SIMPLE_NAME, this.getModel().getServiceName()).replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
             this.setControllerCode(controllerCode);
             return controllerCode;
         } catch (IOException e) {

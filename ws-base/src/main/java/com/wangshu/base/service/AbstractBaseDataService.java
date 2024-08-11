@@ -524,6 +524,13 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
         }
         map.put("pageIndex", (pageIndex - 1) * pageSize);
         map.put("pageSize", pageSize);
+        String orderColumn = String.valueOf(map.get("orderColumn"));
+        if (StringUtil.isNotEmpty(orderColumn)) {
+            String order = String.valueOf(map.get("order"));
+            if (!StrUtil.equalsIgnoreCase(order, "asc") && !StrUtil.equalsIgnoreCase(order, "desc")) {
+                map.put("order", null);
+            }
+        }
         return map;
     }
 

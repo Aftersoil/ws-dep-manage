@@ -35,6 +35,7 @@ public abstract class AbstractColumnInfo<T, M extends ModelInfo<?, ?>> implement
     private List<String> leftSelectFieldNames;
     private String leftJoinField;
     private String rightJoinField;
+    private String indirectJoinField;
     private JoinType joinType;
     private JoinCondition joinCondition;
     private String infix;
@@ -67,6 +68,7 @@ public abstract class AbstractColumnInfo<T, M extends ModelInfo<?, ?>> implement
         this.setLeftSelectFieldNames(ColumnInfo.super.getLeftSelectFieldNames());
         this.setLeftJoinField(ColumnInfo.super.getLeftJoinField());
         this.setRightJoinField(ColumnInfo.super.getRightJoinField());
+        this.setIndirectJoinField(ColumnInfo.super.getIndirectJoinField());
         this.setJoinType(ColumnInfo.super.getJoinType());
         this.setJoinCondition(ColumnInfo.super.getJoinCondition());
         this.setInfix(ColumnInfo.super.getInfix());

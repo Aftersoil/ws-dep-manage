@@ -65,6 +65,7 @@ public class ColumnFieldInfo extends AbstractColumnInfo<Field, ModelClazzInfo> {
             this.setLeftSelectFieldNames(Arrays.asList(this.getJoin().leftSelectFields()));
             this.setLeftJoinField(this.getJoin().leftJoinField());
             this.setRightJoinField(this.getJoin().rightJoinField());
+            this.setIndirectJoinField(this.getJoin().indirectJoinField());
             this.setJoinType(this.getJoin().joinType());
             this.setJoinCondition(this.getJoin().joinCondition());
             this.setInfix(this.getJoin().infix());

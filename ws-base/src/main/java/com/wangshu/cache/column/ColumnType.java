@@ -3,6 +3,7 @@ package com.wangshu.cache.column;
 import com.wangshu.annotation.Column;
 import com.wangshu.tool.StringUtil;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -19,14 +20,14 @@ public class ColumnType {
 
     }
 
-    public ColumnType(Field field) {
+    public ColumnType(@NotNull Field field) {
         this.name = field.getName();
         this.dataType = field.getType().getSimpleName();
         this.order = fieldOrder(field);
         this.title = fieldTitle(field);
     }
 
-    private String fieldTitle(Field field) {
+    private String fieldTitle(@NotNull Field field) {
         Column column = field.getAnnotation(Column.class);
         if (Objects.nonNull(column)) {
             if (StringUtil.isEmpty(column.title())) {
@@ -37,7 +38,8 @@ public class ColumnType {
         return field.getName();
     }
 
-    private Integer fieldOrder(Field field) {
+    @NotNull
+    private Integer fieldOrder(@NotNull Field field) {
         Column column = field.getAnnotation(Column.class);
         if (Objects.nonNull(column)) {
             return column.order();

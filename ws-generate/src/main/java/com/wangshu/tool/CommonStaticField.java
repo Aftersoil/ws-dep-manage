@@ -23,7 +23,7 @@ public class CommonStaticField {
     public static final String BASE_MODEL_PACKAGE_NAME = StringUtil.concat(BaseModel.class.getPackageName(), FILE_DOT, BASE_MODEL_CLAZZ_SIMPLE_NAME);
     public static final String BASE_MAPPER_CLAZZ_SIMPLE_NAME = BaseDataMapper.class.getSimpleName();
     public static final String BASE_MAPPER_PACKAGE_NAME = StringUtil.concat(BaseDataMapper.class.getPackageName(), FILE_DOT, BASE_MAPPER_CLAZZ_SIMPLE_NAME);
-    public static final String BASE_DATA_SERVICE_IMPL_CLAZZ_SIMPLE_NAME = AbstractBaseDataService.class.getSimpleName();
-    public static final String BASE_DATA_SERVICE_IMPL_PACKAGE_NAME = StringUtil.concat(AbstractBaseDataService.class.getPackageName(), FILE_DOT, BASE_DATA_SERVICE_IMPL_CLAZZ_SIMPLE_NAME);
+    public static final String BASE_DATA_SERVICE_CLAZZ_SIMPLE_NAME = AbstractBaseDataService.class.getSimpleName();
+    public static final String BASE_DATA_SERVICE_PACKAGE_NAME = StringUtil.concat(AbstractBaseDataService.class.getPackageName(), FILE_DOT, BASE_DATA_SERVICE_CLAZZ_SIMPLE_NAME);
 
 }
