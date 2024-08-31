@@ -74,7 +74,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     /**
      * <p>保存</p>
      *
-     * @param map {columnName : value}
+     * @param map {conditionName : value}
      * @return int
      **/
     @Transactional(rollbackFor = Exception.class)
@@ -140,7 +140,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     /**
      * <p>删除</p>
      *
-     * @param map {columnName : value}
+     * @param map {conditionName : value}
      * @return BaseModel
      **/
     @Override
@@ -155,14 +155,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
 
     @Transactional(rollbackFor = Exception.class)
     public int delete(@NotNull Object... keyValuesArray) {
-        Map<String, Object> map = new HashMap<>();
-        int length = keyValuesArray.length;
-        for (int i = 0; i < keyValuesArray.length; i++) {
-            if (i % 2 == 0 && length >= i + 1) {
-                map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
-            }
-        }
-        return this.delete(map);
+        return this.delete(this.keyValuesArrayParamsToMap(keyValuesArray));
     }
 
     /**
@@ -209,7 +202,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     /**
      * <p>删除验证</p>
      *
-     * @param map {columnName : value}
+     * @param map {conditionName : value}
      * @return boolean
      **/
     public boolean deleteValidate(@NotNull Map<String, Object> map) {
@@ -220,7 +213,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     /**
      * <p>更新</p>
      *
-     * @param map {columnName : value}
+     * @param map {conditionName : value}
      * @return int
      **/
     @Override
@@ -277,20 +270,13 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
 
     @Transactional(rollbackFor = Exception.class)
     public int update(@NotNull Object... keyValuesArray) {
-        Map<String, Object> map = new HashMap<>();
-        int length = keyValuesArray.length;
-        for (int i = 0; i < keyValuesArray.length; i++) {
-            if (i % 2 == 0 && length >= i + 1) {
-                map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
-            }
-        }
-        return this.update(map);
+        return this.update(this.keyValuesArrayParamsToMap(keyValuesArray));
     }
 
     /**
      * <p>更新参数过滤,这里的new是防止更新条件和更新值参数冲突,只有更新操作强制这样做(有更好方案可重写替换)</p>
      *
-     * @param map {columnName : value}
+     * @param map {conditionName : value}
      * @return Map<String, Object>
      **/
     public Map<String, Object> updateParamFilter(@NotNull Map<String, Object> map) {
@@ -308,7 +294,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     /**
      * <p>更新验证</p>
      *
-     * @param map {columnName : value}
+     * @param map {conditionName : value}
      * @return boolean
      **/
     public boolean updateValidate(@NotNull Map<String, Object> map) {
@@ -322,7 +308,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     /**
      * <p>查询1条</p>
      *
-     * @param map {columnName : value}
+     * @param map {conditionName : value}
      * @return T extends BaseModel
      **/
     @Override
@@ -385,9 +371,9 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     /**
      * <p>查询1条</p>
      *
-     * @param column1 columnName
+     * @param column1 conditionName
      * @param param1  value
-     * @param column2 columnName
+     * @param column2 conditionName
      * @param param2  value
      * @return T extends BaseModel
      **/
@@ -399,21 +385,14 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     public @Nullable T select(@NotNull Object... keyValuesArray) {
-        Map<String, Object> map = new HashMap<>();
-        int length = keyValuesArray.length;
-        for (int i = 0; i < length; i++) {
-            if (i % 2 == 0 && length > i + 1) {
-                map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
-            }
-        }
-        return this.select(map);
+        return this.select(this.keyValuesArrayParamsToMap(keyValuesArray));
     }
 
     /**
      * <p>查询列表</p>
      *
-     * @param map {columnName : value}
-     * @return List<T> T extends BaseModel
+     * @param map {conditionName : value}
+     * @return List<Map < String, Object>>
      **/
     @Override
     public @NotNull List<Map<String, Object>> getList(@NotNull Map<String, Object> map) {
@@ -425,10 +404,40 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     /**
+     * <p>查询列表,忽略分页</p>
+     *
+     * @param map {conditionName : value}
+     * @return List<Map < String, Object>>
+     **/
+    public @NotNull List<Map<String, Object>> getListWithOutLimit(@NotNull Map<String, Object> map) {
+        map = this.listParamFilter(map);
+        if (this.listValidate(map)) {
+            map.remove("pageIndex");
+            map.remove("pageSize");
+            return this.getMapper()._getList(map);
+        }
+        throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
+    }
+
+    public @NotNull List<Map<String, Object>> getListWithOutLimit(String column, Object value) {
+        Map<String, Object> map = new HashMap<>(1);
+        map.put(column, value);
+        return this.getListWithOutLimit(map);
+    }
+
+    public @NotNull List<Map<String, Object>> getListWithOutLimit(@NotNull T model) {
+        return this.getListWithOutLimit(model.toMap());
+    }
+
+    public @NotNull List<Map<String, Object>> getListWithOutLimit(@NotNull Object... keyValuesArray) {
+        return this.getListWithOutLimit(this.keyValuesArrayParamsToMap(keyValuesArray));
+    }
+
+    /**
      * <p>查询列表</p>
      *
      * @param model extends BaseModel
-     * @return List<T> T extends BaseModel
+     * @return List<Map < String, Object>>
      **/
     public @NotNull List<Map<String, Object>> getList(@NotNull T model) {
         return this.getList(model.toMap());
@@ -439,7 +448,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
      *
      * @param column column
      * @param value  value
-     * @return List<T> T extends BaseModel
+     * @return List<Map < String, Object>>
      **/
     public @NotNull List<Map<String, Object>> getList(String column, Object value) {
         Map<String, Object> map = new HashMap<>(1);
@@ -487,17 +496,31 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     public @NotNull List<T> getNestList(@NotNull Object... keyValuesArray) {
-        if (keyValuesArray.length > 0) {
-            Map<String, Object> map = new HashMap<>();
-            int length = keyValuesArray.length;
-            for (int i = 0; i < keyValuesArray.length; i++) {
-                if (i % 2 == 0 && length >= i + 1) {
-                    map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
-                }
-            }
-            return this.getNestList(map);
+        return this.getNestList(this.keyValuesArrayParamsToMap(keyValuesArray));
+    }
+
+    public @NotNull List<T> getNestListWithOutLimit(@NotNull Map<String, Object> map) {
+        map = this.listParamFilter(map);
+        if (this.listValidate(map)) {
+            map.remove("pageIndex");
+            map.remove("pageSize");
+            return this.getMapper()._getNestList(map);
         }
-        return List.of();
+        throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
+    }
+
+    public @NotNull List<T> getNestListWithOutLimit(String column, Object value) {
+        Map<String, Object> map = new HashMap<>(1);
+        map.put(column, value);
+        return this.getNestListWithOutLimit(map);
+    }
+
+    public @NotNull List<T> getNestListWithOutLimit(@NotNull T model) {
+        return this.getNestListWithOutLimit(model.toMap());
+    }
+
+    public @NotNull List<T> getNestListWithOutLimit(@NotNull Object... keyValuesArray) {
+        return this.getNestListWithOutLimit(this.keyValuesArrayParamsToMap(keyValuesArray));
     }
 
     public Map<String, Object> listParamFilter(@NotNull Map<String, Object> map) {
@@ -545,14 +568,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     public int getTotal(@NotNull Object... keyValuesArray) {
-        Map<String, Object> map = new HashMap<>();
-        int length = keyValuesArray.length;
-        for (int i = 0; i < keyValuesArray.length; i++) {
-            if (i % 2 == 0 && length >= i + 1) {
-                map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
-            }
-        }
-        return this.getTotal(map);
+        return this.getTotal(this.keyValuesArrayParamsToMap(keyValuesArray));
     }
 
     public int getTotal() {
@@ -630,6 +646,17 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
 
     public Field getModelPrimaryField() {
         return CacheTool.getModelPrimaryField(this.getModelClazz());
+    }
+
+    public Map<String, Object> keyValuesArrayParamsToMap(@NotNull Object... keyValuesArray) {
+        Map<String, Object> map = new HashMap<>();
+        int length = keyValuesArray.length;
+        for (int i = 0; i < keyValuesArray.length; i++) {
+            if (i % 2 == 0 && length >= i + 1) {
+                map.put(String.valueOf(keyValuesArray[i]), keyValuesArray[i + 1]);
+            }
+        }
+        return map;
     }
 
 }

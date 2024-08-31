@@ -278,7 +278,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         listElement.addText(CommonStaticField.WRAP);
         listElement.add(this.getOrder());
         listElement.addText(CommonStaticField.WRAP);
-        listElement.addText(this.getLimit());
+        listElement.add(this.getLimit());
         return listElement;
     }
 
@@ -317,7 +317,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         nestListElement.addText(CommonStaticField.WRAP);
         nestListElement.add(this.getOrder());
         nestListElement.addText(CommonStaticField.WRAP);
-        nestListElement.addText(this.getLimit());
+        nestListElement.add(this.getLimit());
         return nestListElement;
     }
 
@@ -576,8 +576,11 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         ifElement.addText(ifText);
     }
 
-    public String getLimit() {
-        return StringUtil.concat("limit ", this.getConcatStr("pageIndex"), ",", this.getConcatStr("pageSize"));
+    public org.dom4j.Element getLimit() {
+        org.dom4j.Element ifElement = this.createXmlElement("if");
+        ifElement.addAttribute("test", "pageIndex != null and pageSize != null");
+        ifElement.addText(StringUtil.concat("limit ", this.getConcatStr("pageIndex"), ",", this.getConcatStr("pageSize")));
+        return ifElement;
     }
 
     public org.dom4j.Element getOrder() {
