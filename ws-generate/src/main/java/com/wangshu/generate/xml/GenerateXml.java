@@ -446,6 +446,9 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
 
                 T rightModel = field.getRightModel();
                 String rightJoinField = field.getRightJoinField();
+                if (Objects.isNull(rightModel)) {
+                    throw new RuntimeException("error");
+                }
                 String rightTable = rightModel.getTableName();
                 String rightTableAs = this.getJoinRightTableAsName(field);
 
@@ -579,7 +582,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
     public org.dom4j.Element getLimit() {
         org.dom4j.Element ifElement = this.createXmlElement("if");
         ifElement.addAttribute("test", "pageIndex != null and pageSize != null");
-        ifElement.addText(StringUtil.concat("limit ", this.getConcatStr("pageIndex"), ",", this.getConcatStr("pageSize")));
+        ifElement.addText(StringUtil.concat("limit ", this.getPreCompileStr("pageIndex"), ",", this.getPreCompileStr("pageSize")));
         return ifElement;
     }
 

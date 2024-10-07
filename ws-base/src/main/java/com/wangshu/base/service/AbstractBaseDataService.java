@@ -178,7 +178,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     @Transactional(rollbackFor = Exception.class)
     public int delete(P id) {
         if (StringUtil.isEmpty(id)) {
-            log.error("根据主键字段删除时主键字段不能为空!");
+            log.error("根据主键字段删除时主键字段不能为空,异常参数: {}", id);
             throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
         }
         Map<String, Object> map = new HashMap<>(1);
@@ -192,8 +192,8 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     public Map<String, Object> deleteParamFilter(@NotNull Map<String, Object> map) {
-        if (map.isEmpty()) {
-            log.error("删除操作参数不能为空!如场景需要,建议单独写一个方法(也可重写该验证方法,但不建议!)");
+        if (map.isEmpty() || map.keySet().stream().noneMatch(CacheTool.getModelDeleteMethodPossibleWhereParameterName(this.getModelClazz())::contains)) {
+            log.error("没有合法的删除参数!如场景需要,建议单独写一个方法(也可重写该验证方法,但不建议!),异常参数: {}", map);
             throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
         }
         return map;
@@ -227,7 +227,11 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int update(String id, @NotNull String column1, Object newValue) {
+    public int update(P id, @NotNull String column1, Object newValue) {
+        if (StringUtil.isEmpty(id)) {
+            log.error("根据主键字段更新时主键字段不能为空,异常参数: {}", id);
+            throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
+        }
         Map<String, Object> map = new HashMap<>();
         Field modelPrimaryField = this.getModelPrimaryField();
         if (Objects.isNull(modelPrimaryField)) {
@@ -257,7 +261,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
         }
         Object primaryValue = model.modelAnyValueByFieldName(modelPrimaryField.getName());
         if (StringUtil.isEmpty(primaryValue)) {
-            log.error("使用实体类更新时主键字段不能为空!");
+            log.error("使用实体类更新时主键字段不能为空,异常参数: {}", primaryValue);
             throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
         }
         Map<String, Object> param = new HashMap<>();
@@ -280,8 +284,8 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
      * @return Map<String, Object>
      **/
     public Map<String, Object> updateParamFilter(@NotNull Map<String, Object> map) {
-        if (map.isEmpty()) {
-            log.error("更新操作参数不能为空!如场景需要,建议单独写一个方法(也可重写该验证方法,但不建议!)");
+        if (map.isEmpty() || map.keySet().stream().noneMatch(CacheTool.getModelUpdateMethodPossibleWhereParameterName(this.getModelClazz())::contains)) {
+            log.error("没有合法的更新参数!如场景需要,建议单独写一个方法(也可重写该验证方法,但不建议!),异常参数: {}", map);
             throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
         }
         if (StringUtil.isEmpty(map.get("newUpdatedAt"))) {
@@ -300,7 +304,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     public boolean updateValidate(@NotNull Map<String, Object> map) {
         log.info("更新操作参数: {}", map);
         if (map.keySet().stream().filter(key -> !key.startsWith("new")).toList().isEmpty()) {
-            log.warn("更新条件参数没有有效新值,注意检查相关代码");
+            log.warn("更新条件参数没有有效新值,注意检查相关代码,详细参数: {}", map);
         }
         return true;
     }
@@ -355,7 +359,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
      **/
     public @Nullable T select(P id) {
         if (StringUtil.isEmpty(id)) {
-            log.error("根据主键字段查询时主键字段不能为空!");
+            log.error("根据主键字段查询时主键字段不能为空,异常参数: {}", id);
             throw new IException(CommonErrorInfo.BODY_NOT_MATCH);
         }
         Map<String, Object> map = new HashMap<>();
@@ -538,7 +542,6 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
         try {
             pageSize = Integer.parseInt(String.valueOf(map.get("pageSize")));
             if (pageSize <= 0) {
-                log.warn("不规范的pageSize参数");
                 pageSize = 10;
             }
         } catch (Exception e) {
@@ -549,9 +552,14 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
         map.put("pageSize", pageSize);
         String orderColumn = String.valueOf(map.get("orderColumn"));
         if (StringUtil.isNotEmpty(orderColumn)) {
-            String order = String.valueOf(map.get("order"));
-            if (!StrUtil.equalsIgnoreCase(order, "asc") && !StrUtil.equalsIgnoreCase(order, "desc")) {
-                map.put("order", null);
+            if (CacheTool.getModelOrderColumnPossibleParameterName(this.getModelClazz()).contains(orderColumn)) {
+                String order = String.valueOf(map.get("order"));
+                if (!StrUtil.equalsIgnoreCase(order, "asc") && !StrUtil.equalsIgnoreCase(order, "desc")) {
+                    map.put("order", "asc");
+                }
+            } else {
+                map.remove("orderColumn");
+                log.warn("orderColumn参数无效,详细参数: {}", orderColumn);
             }
         }
         return map;

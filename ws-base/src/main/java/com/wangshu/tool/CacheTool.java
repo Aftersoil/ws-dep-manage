@@ -58,12 +58,12 @@ public class CacheTool {
         return getOrCreateServiceCache(serviceClazz).mapperGeneric;
     }
 
-    public static List<Field> getServiceModelGenericFields(@NotNull Class<? extends BaseDataService> serviceClazz) {
+    public static @NotNull List<Field> getServiceModelGenericFields(@NotNull Class<? extends BaseDataService> serviceClazz) {
         Class<? extends BaseModel> serviceModelGeneric = getServiceModelGeneric(serviceClazz);
         return getModelFields(serviceModelGeneric);
     }
 
-    public static List<Field> getServiceModelGenericBaseFields(@NotNull Class<? extends BaseDataService> serviceClazz) {
+    public static @NotNull List<Field> getServiceModelGenericBaseFields(@NotNull Class<? extends BaseDataService> serviceClazz) {
         Class<? extends BaseModel> serviceModelGeneric = getServiceModelGeneric(serviceClazz);
         return getModelBaseFields(serviceModelGeneric);
     }
@@ -76,11 +76,11 @@ public class CacheTool {
         return modelCache;
     }
 
-    public static List<Field> getModelFields(@NotNull Class<? extends BaseModel> modelClazz) {
+    public static @NotNull List<Field> getModelFields(@NotNull Class<? extends BaseModel> modelClazz) {
         return getOrCreateModelCache(modelClazz).fields;
     }
 
-    public static List<Field> getModelBaseFields(@NotNull Class<? extends BaseModel> modelClazz) {
+    public static @NotNull List<Field> getModelBaseFields(@NotNull Class<? extends BaseModel> modelClazz) {
         return getOrCreateModelCache(modelClazz).baseFields;
     }
 
@@ -88,8 +88,20 @@ public class CacheTool {
         return getOrCreateModelCache(modelClazz).primaryField;
     }
 
-    public static @Nullable List<ColumnType> getModelColumnTypes(@NotNull Class<? extends BaseModel> modelClazz) {
+    public static @NotNull List<ColumnType> getModelColumnTypes(@NotNull Class<? extends BaseModel> modelClazz) {
         return getOrCreateModelCache(modelClazz).columnTypes;
+    }
+
+    public static @NotNull List<String> getModelOrderColumnPossibleParameterName(@NotNull Class<? extends BaseModel> modelClazz) {
+        return getOrCreateModelCache(modelClazz).orderColumnPossibleParameterName;
+    }
+
+    public static @NotNull List<String> getModelDeleteMethodPossibleWhereParameterName(@NotNull Class<? extends BaseModel> modelClazz) {
+        return getOrCreateModelCache(modelClazz).deleteMethodPossibleWhereParameterName;
+    }
+
+    public static @NotNull List<String> getModelUpdateMethodPossibleWhereParameterName(@NotNull Class<? extends BaseModel> modelClazz) {
+        return getOrCreateModelCache(modelClazz).updateMethodPossibleWhereParameterName;
     }
 
     private static @NotNull ControllerCache getOrCreateControllerCache(Class<? extends BaseDataController> controllerClazz) {
@@ -108,7 +120,7 @@ public class CacheTool {
         return getOrCreateControllerCache(controllerClazz).serviceGeneric;
     }
 
-    public static List<ColumnType> getControllerModelGenericColumnType(@NotNull Class<? extends BaseDataController> controllerClazz) {
+    public static @NotNull List<ColumnType> getControllerModelGenericColumnType(@NotNull Class<? extends BaseDataController> controllerClazz) {
         Class<? extends BaseModel> controllerModelGeneric = getControllerModelGeneric(controllerClazz);
         return getModelColumnTypes(controllerModelGeneric);
     }

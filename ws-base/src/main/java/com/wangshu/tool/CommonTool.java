@@ -1,5 +1,7 @@
 package com.wangshu.tool;
 
+import com.wangshu.annotation.Column;
+import com.wangshu.annotation.Join;
 import com.wangshu.base.mapper.BaseDataMapper;
 import com.wangshu.base.model.BaseModel;
 import com.wangshu.base.service.AbstractBaseDataService;
@@ -101,6 +103,36 @@ public class CommonTool {
         while (clazz != null) {
             for (Field declaredField : clazz.getDeclaredFields()) {
                 if (Objects.isNull(map.get(declaredField.getName()))) {
+                    map.put(declaredField.getName(), declaredField);
+                    fields.add(declaredField);
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
+    }
+
+    public static @NotNull List<Field> getClazzBaseFields(@NotNull Class<?> clazz) {
+        Map<String, Field> map = new HashMap<>();
+        List<Field> fields = new ArrayList<>();
+        while (clazz != null) {
+            for (Field declaredField : clazz.getDeclaredFields()) {
+                if (Objects.nonNull(declaredField.getAnnotation(Column.class)) && Objects.isNull(map.get(declaredField.getName()))) {
+                    map.put(declaredField.getName(), declaredField);
+                    fields.add(declaredField);
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
+    }
+
+    public static @NotNull List<Field> getClazzJoinFields(@NotNull Class<?> clazz) {
+        Map<String, Field> map = new HashMap<>();
+        List<Field> fields = new ArrayList<>();
+        while (clazz != null) {
+            for (Field declaredField : clazz.getDeclaredFields()) {
+                if (Objects.nonNull(declaredField.getAnnotation(Join.class)) && Objects.isNull(map.get(declaredField.getName()))) {
                     map.put(declaredField.getName(), declaredField);
                     fields.add(declaredField);
                 }

@@ -18,7 +18,7 @@
 
 相关功能、使用参考 [该模板仓库代码](https://github.com/wangshu-g/ws-generate-test-example)
 
-可以使用 ws-generate 模块手动生成、也可在[该网站](https://www.望舒.com)免费上传生成、[该IDEA插件](https://plugins.jetbrains.com/embeddable/install/23060) 插件免费上传生成
+可以使用 ws-generate 模块自行手动生成、也可在[该网站](https://www.望舒.com)免费上传生成、[该IDEA插件](https://plugins.jetbrains.com/embeddable/install/23060) 插件免费上传生成
 
 网站可以配置一些前端表单、页面模板代码，对前端做了一些基本扩展
 
@@ -35,20 +35,20 @@
 <dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-base</artifactId>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
 </dependency>
 
 <!--可选-->
 <dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-spring-boot-starter</artifactId>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
 </dependency>
 
 <!--可选-->
 <dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-generate</artifactId>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
 </dependency>
 ```

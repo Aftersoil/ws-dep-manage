@@ -56,12 +56,12 @@ public class ColumnFieldInfo extends AbstractColumnInfo<Field, ModelClazzInfo> {
         Class<?> fieldType = metaData.getType();
         if (Objects.nonNull(join)) {
             this.setJoin(join);
+            this.setClassJoinField(BaseModel.class.isAssignableFrom(fieldType));
+            this.setCollectionJoinField(StrUtil.equals(fieldType.getName(), List.class.getName()));
             this.setLeftModel(this.initLeftModel(model, join));
             this.setRightModel(this.initRightModel(model, join));
             this.setJoin(join);
             this.setJoinField(true);
-            this.setClassJoinField(BaseModel.class.isAssignableFrom(fieldType));
-            this.setCollectionJoinField(StrUtil.equals(fieldType.getName(), List.class.getName()));
             this.setLeftSelectFieldNames(Arrays.asList(this.getJoin().leftSelectFields()));
             this.setLeftJoinField(this.getJoin().leftJoinField());
             this.setRightJoinField(this.getJoin().rightJoinField());
