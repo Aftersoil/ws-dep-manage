@@ -11,11 +11,12 @@ import com.wangshu.base.controller.update.UpdateResultBody;
 import com.wangshu.base.mapper.BaseDataMapper;
 import com.wangshu.base.model.BaseModel;
 import com.wangshu.base.service.AbstractBaseDataService;
+import com.wangshu.base.service.BaseDataService;
 
 /**
  * @author GSF
  * <p>BaseControllerImpl</p>
  */
-public abstract class AbstractBaseDataControllerResultTableBody<S extends AbstractBaseDataService<?, ? extends BaseDataMapper<T>, T>, T extends BaseModel> implements SaveResultBody<S, T>, DeleteResultBody<S, T>, UpdateResultBody<S, T>, SelectResultBody<S, T>, ListTableResultTableBody<S, T>, NestListResultTableBody<S, T>, ExportExcel<S, T>, ImportExcel<S, T> {
+public abstract class AbstractBaseDataControllerResultTableBody<S extends BaseDataService<?, ? extends BaseDataMapper<T>, T>, T extends BaseModel> implements SaveResultBody<S, T>, DeleteResultBody<S, T>, UpdateResultBody<S, T>, SelectResultBody<S, T>, ListTableResultTableBody<S, T>, NestListResultTableBody<S, T>, ExportExcel<S, T>, ImportExcel<S, T> {
 
 }

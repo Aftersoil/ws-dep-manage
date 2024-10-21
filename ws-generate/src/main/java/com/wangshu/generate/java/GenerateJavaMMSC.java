@@ -10,6 +10,7 @@ import com.wangshu.base.controller.BaseDataController;
 import com.wangshu.base.mapper.BaseDataMapper;
 import com.wangshu.base.model.BaseModel;
 import com.wangshu.base.service.AbstractBaseDataService;
+import com.wangshu.base.service.BaseDataService;
 import com.wangshu.enu.Condition;
 import com.wangshu.enu.JoinCondition;
 import com.wangshu.enu.JoinType;
@@ -20,7 +21,6 @@ import com.wangshu.tool.GenerateJavaUtil;
 import com.wangshu.tool.StringUtil;
 import jakarta.annotation.Resource;
 import lombok.EqualsAndHashCode;
-import lombok.SneakyThrows;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
@@ -48,6 +48,7 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     private String modelCode;
     private String mapperCode;
     private String serviceCode;
+    private String serviceImplCode;
     private String controllerCode;
 
     public GenerateJavaMMSC(T model, Consumer<MessageException> message) {
@@ -59,7 +60,7 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         this.model = model;
     }
 
-    public TypeSpec generateModelClass() {
+    public String generateModelClass() throws IOException {
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.getModel().getModelName()).addModifiers(Modifier.PUBLIC).superclass(BaseModel.class);
 
         AnnotationSpec dataAnnotation = GenerateJavaUtil.generateAnnotationSpec(Data.class);
@@ -124,10 +125,10 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
             }
         }
 
-        return typeSpec.build();
+        return GenerateJavaUtil.getJavaCode(this.getModel().getModelPackageName(), typeSpec.build());
     }
 
-    public TypeSpec generateMapperInterface() {
+    public String generateMapperInterface() throws IOException {
         TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(this.getModel().getMapperName()).addModifiers(Modifier.PUBLIC);
 
         ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(BaseDataMapper.class, BaseModel.class);
@@ -136,15 +137,24 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         AnnotationSpec mapperAnnotation = GenerateJavaUtil.generateAnnotationSpec(Mapper.class);
         typeSpec.addAnnotation(mapperAnnotation);
 
-        return typeSpec.build();
+        return GenerateJavaUtil.getJavaCode(this.getModel().getMapperPackageName(), typeSpec.build());
     }
 
-    @SneakyThrows
-    public TypeSpec generateServiceClass() {
+    public String generateServiceClass() throws IOException, ClassNotFoundException {
+
+        Class<?> primaryFieldClazz = Class.forName(this.getModel().getPrimaryField().getJavaTypeName());
+
+        ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(BaseDataService.class, primaryFieldClazz, BaseDataMapper.class, BaseModel.class);
+        TypeSpec.Builder typeSpec = TypeSpec.interfaceBuilder(this.getModel().getServiceName()).addModifiers(Modifier.PUBLIC).addSuperinterface(parameterizedTypeName);
+
+        return GenerateJavaUtil.getJavaCode(this.getModel().getServicePackageName(), typeSpec.build());
+    }
+
+    public String generateServiceImplClass() throws ClassNotFoundException, IOException {
         Class<?> primaryFieldClazz = Class.forName(this.getModel().getPrimaryField().getJavaTypeName());
 
         ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(AbstractBaseDataService.class, primaryFieldClazz, BaseDataMapper.class, BaseModel.class);
-        TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.getModel().getServiceName()).addModifiers(Modifier.PUBLIC).superclass(parameterizedTypeName);
+        TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.getModel().getServiceImplName()).addModifiers(Modifier.PUBLIC).superclass(parameterizedTypeName).addSuperinterface(BaseDataService.class);
 
         String mapper = StringUtil.concat(this.getModel().getMapperName().substring(0, 1).toLowerCase(), this.getModel().getMapperName().substring(1));
 
@@ -157,14 +167,16 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         AnnotationSpec serviceAnnotation = GenerateJavaUtil.generateAnnotationSpec(Service.class);
         typeSpec.addAnnotation(serviceAnnotation);
 
-//        AnnotationSpec.Builder transactionalAnnotation = GenerateJavaUtil.generateAnnotationBuilder(Transactional.class);
-//        transactionalAnnotation.addMember("rollbackFor", "$T.class", Exception.class);
-//        typeSpec.addAnnotation(transactionalAnnotation.build());
-
-        return typeSpec.build();
+        return GenerateJavaUtil.getJavaCode(this.getModel().getServiceImplPackageName(), typeSpec.build())
+                .replaceAll(BASE_MAPPER_PACKAGE_NAME, this.getModel().getMapperFullName())
+                .replaceAll(BASE_MAPPER_CLAZZ_SIMPLE_NAME, this.getModel().getMapperName())
+                .replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName())
+                .replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName())
+                .replaceAll(BASE_DATA_SERVICE_CLAZZ_PACKAGE_NAME, this.getModel().getServiceFullName())
+                .replaceAll(StringUtil.concat("implements ", BASE_DATA_SERVICE_CLAZZ_SIMPLE_NAME), StringUtil.concat("implements ", this.getModel().getServiceName()));
     }
 
-    public TypeSpec generateControllerClass() {
+    public String generateControllerClass() throws IOException {
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder(this.getModel().getControllerName()).addModifiers(Modifier.PUBLIC).superclass(ParameterizedTypeName.get(controllerSuperClazz, AbstractBaseDataService.class, BaseModel.class));
 
         String service = StringUtil.concat(this.getModel().getServiceName().substring(0, 1).toLowerCase(), this.getModel().getServiceName().substring(1));
@@ -178,10 +190,6 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         MethodSpec getModelMethod = GenerateJavaUtil.generateMethodBuilder("getModel", TypeName.get(BaseModel.class), Override.class, Modifier.PUBLIC).addCode(StringUtil.concat("return new ", BASE_MODEL_CLAZZ_SIMPLE_NAME, "();")).build();
         typeSpec.addMethod(getModelMethod);
 
-//        AnnotationSpec.Builder transactionalAnnotation = GenerateJavaUtil.generateAnnotationBuilder(Transactional.class);
-//        transactionalAnnotation.addMember("rollbackFor", "{$T.$L}", Exception.class, "class");
-//        typeSpec.addAnnotation(transactionalAnnotation.build());
-
         AnnotationSpec restControllerAnnotation = GenerateJavaUtil.generateAnnotationSpec(RestController.class);
         typeSpec.addAnnotation(restControllerAnnotation);
 
@@ -189,7 +197,11 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         requestMappingAnnotation.addMember("value", "$S", StringUtil.concat("/", this.getModel().getModelName()));
         typeSpec.addAnnotation(requestMappingAnnotation.build());
 
-        return typeSpec.build();
+        return GenerateJavaUtil.getJavaCode(this.getModel().getControllerPackageName(), typeSpec.build())
+                .replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName())
+                .replaceAll(ABSTRACT_BASE_DATA_SERVICE_PACKAGE_NAME, this.getModel().getServiceFullName())
+                .replaceAll(ABSTRACT_BASE_DATA_SERVICE_CLAZZ_SIMPLE_NAME, this.getModel().getServiceName())
+                .replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
     }
 
     @Override
@@ -236,6 +248,19 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
         return true;
     }
 
+    public boolean writeServiceImpl(String path) {
+        if (StringUtil.isEmpty(this.getServiceImplCode())) {
+            this.generateServiceImplCode();
+        }
+        if (StringUtil.isEmpty(this.getServiceImplCode())) {
+            return false;
+        }
+        File file = FileUtil.touch(path);
+        file.deleteOnExit();
+        FileUtil.writeString(this.getServiceImplCode(), file, StandardCharsets.UTF_8);
+        return true;
+    }
+
     public boolean writeController(String path) {
         if (StringUtil.isEmpty(this.getControllerCode())) {
             this.generateControllerCode();
@@ -250,9 +275,9 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     }
 
     public String generateModelCode() {
-        TypeSpec model = this.generateModelClass();
         try {
-            String modelCode = GenerateJavaUtil.getJavaCode(this.getModel().getModelFullName(), model).replaceAll(StringUtil.concat("package ", this.getModel().getModelFullName()), StringUtil.concat("package ", this.getModel().getModelPackageName()));
+            String modelCode = this.generateModelClass()
+                    .replaceAll(StringUtil.concat("package ", this.getModel().getModelFullName()), StringUtil.concat("package ", this.getModel().getModelPackageName()));
             for (F item : this.getModel().getFields()) {
                 if (item.isCollectionJoinField()) {
                     modelCode = modelCode.replace(StringUtil.concat("\"", item.getLeftModel().getModelName(), "\""), item.getLeftModel().getModelName());
@@ -273,9 +298,10 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     }
 
     public String generateMapperCode() {
-        TypeSpec mapper = this.generateMapperInterface();
         try {
-            String mapperCode = GenerateJavaUtil.getJavaCode(this.getModel().getMapperFullName(), mapper).replaceAll(StringUtil.concat("package ", this.getModel().getMapperFullName()), StringUtil.concat("package ", this.getModel().getMapperPackageName())).replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName()).replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
+            String mapperCode = this.generateMapperInterface()
+                    .replaceAll(StringUtil.concat("package ", this.getModel().getMapperFullName()), StringUtil.concat("package ", this.getModel().getMapperPackageName()))
+                    .replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName()).replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
             this.setMapperCode(mapperCode);
             return mapperCode;
         } catch (IOException e) {
@@ -285,21 +311,39 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     }
 
     public String generateServiceCode() {
-        TypeSpec service = this.generateServiceClass();
         try {
-            String serviceCode = GenerateJavaUtil.getJavaCode(this.getModel().getServiceFullName(), service).replaceAll(StringUtil.concat("package ", this.getModel().getServiceFullName()), StringUtil.concat("package ", this.getModel().getServicePackageName())).replaceAll(BASE_MAPPER_PACKAGE_NAME, this.getModel().getMapperFullName()).replaceAll(BASE_MAPPER_CLAZZ_SIMPLE_NAME, this.getModel().getMapperName()).replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName()).replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
+            String serviceCode = this.generateServiceClass()
+                    .replaceAll(StringUtil.concat("package ", this.getModel().getServiceFullName()), StringUtil.concat("package ", this.getModel().getServicePackageName()))
+                    .replaceAll(BASE_MAPPER_PACKAGE_NAME, this.getModel().getMapperFullName()).replaceAll(BASE_MAPPER_CLAZZ_SIMPLE_NAME, this.getModel().getMapperName())
+                    .replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName()).replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
             this.setServiceCode(serviceCode);
             return serviceCode;
         } catch (IOException e) {
+            this.printError(StringUtil.concat("获取service失败,对应的model类是:", this.getModel().getModelName(), ",失败原因: ", e.getMessage()), e);
+        } catch (ClassNotFoundException e) {
+            this.printError(StringUtil.concat("主键类型异常,对应的model类是:", this.getModel().getModelName()));
             this.printError(StringUtil.concat("获取service失败,对应的model类是:", this.getModel().getModelName(), ",失败原因: ", e.getMessage()), e);
         }
         return null;
     }
 
-    public String generateControllerCode() {
-        TypeSpec controller = this.generateControllerClass();
+    public String generateServiceImplCode() {
         try {
-            String controllerCode = GenerateJavaUtil.getJavaCode(this.getModel().getControllerFullName(), controller).replaceAll(StringUtil.concat("package ", this.getModel().getControllerFullName()), StringUtil.concat("package ", this.getModel().getControllerPackageName())).replaceAll(BASE_MODEL_PACKAGE_NAME, this.getModel().getModelFullName()).replaceAll(BASE_DATA_SERVICE_PACKAGE_NAME, this.getModel().getServiceFullName()).replaceAll(BASE_DATA_SERVICE_CLAZZ_SIMPLE_NAME, this.getModel().getServiceName()).replaceAll(BASE_MODEL_CLAZZ_SIMPLE_NAME, this.getModel().getModelName());
+            String serviceImplCode = this.generateServiceImplClass();
+            this.setServiceImplCode(serviceImplCode);
+            return serviceImplCode;
+        } catch (IOException e) {
+            this.printError(StringUtil.concat("获取serviceImpl失败,对应的model类是:", this.getModel().getModelName(), ",失败原因: ", e.getMessage()), e);
+        } catch (ClassNotFoundException e) {
+            this.printError(StringUtil.concat("主键类型异常,对应的model类是:", this.getModel().getModelName()));
+            this.printError(StringUtil.concat("获取serviceImpl失败,对应的model类是:", this.getModel().getModelName(), ",失败原因: ", e.getMessage()), e);
+        }
+        return null;
+    }
+
+    public String generateControllerCode() {
+        try {
+            String controllerCode = this.generateControllerClass();
             this.setControllerCode(controllerCode);
             return controllerCode;
         } catch (IOException e) {
@@ -321,6 +365,11 @@ public class GenerateJavaMMSC<T extends ModelInfo<?, F>, F extends ColumnInfo<?,
     @Override
     public boolean writeService() {
         return this.writeService(this.getModel().getGenerateServiceFilePath());
+    }
+
+    @Override
+    public boolean writeServiceImpl() {
+        return this.writeServiceImpl(this.getModel().getGenerateServiceImplFilePath());
     }
 
     @Override

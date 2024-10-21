@@ -18,6 +18,8 @@ public abstract class GenerateJava implements GenerateInfo {
 
     public abstract boolean writeService();
 
+    public abstract boolean writeServiceImpl();
+
     public abstract boolean writeController();
 
 }

@@ -106,6 +106,18 @@ public interface ModelInfo<T, F extends ColumnInfo<?, ?>> extends Model {
         return this.getServiceFullName().replace(StringUtil.concat(".", this.getServiceName()), "");
     }
 
+    default String getServiceImplName() {
+        return StringUtil.concat(this.getModelName(), "ServiceImpl");
+    }
+
+    default String getServiceImplFullName() {
+        return this.getModelFullName().replace(StringUtil.concat("model.", this.getModelName()), StringUtil.concat("service.impl.", this.getServiceImplName()));
+    }
+
+    default String getServiceImplPackageName() {
+        return this.getServiceImplFullName().replace(StringUtil.concat(".", this.getServiceImplName()), "");
+    }
+
     default String getControllerName() {
         return StringUtil.concat(this.getModelName(), "Controller");
     }
@@ -162,6 +174,10 @@ public interface ModelInfo<T, F extends ColumnInfo<?, ?>> extends Model {
         return StringUtil.concat(this.getModuleInfo().getModuleServicePath(), this.getServiceName(), JAVA_SUFFIX);
     }
 
+    default String getServiceImplFilePath() {
+        return StringUtil.concat(this.getModuleInfo().getModuleServiceImplPath(), this.getServiceImplName(), JAVA_SUFFIX);
+    }
+
     default String getControllerFilePath() {
         return StringUtil.concat(this.getModuleInfo().getModuleControllerPath(), this.getControllerName(), JAVA_SUFFIX);
     }
@@ -180,6 +196,10 @@ public interface ModelInfo<T, F extends ColumnInfo<?, ?>> extends Model {
 
     default String getGenerateServiceFilePath() {
         return StringUtil.concat(this.getModuleInfo().getModuleGenerateServicePath(), this.getServiceName(), JAVA_SUFFIX);
+    }
+
+    default String getGenerateServiceImplFilePath() {
+        return StringUtil.concat(this.getModuleInfo().getModuleGenerateServiceImplPath(), this.getServiceImplName(), JAVA_SUFFIX);
     }
 
     default String getGenerateControllerFilePath() {

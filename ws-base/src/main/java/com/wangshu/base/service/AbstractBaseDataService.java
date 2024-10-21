@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * @author GSF
  * <p>AbstractBaseDataService implements BaseService</p>
  */
-public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T extends BaseModel> implements BaseDataService<M, T> {
+public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T extends BaseModel> implements BaseDataService<P, M, T> {
 
     public Logger log = LoggerFactory.getLogger(this.getClass());
 

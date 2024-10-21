@@ -37,6 +37,9 @@ public abstract class AbstractModelInfo<T, F extends ColumnInfo<?, ?>> implement
     private String serviceName;
     private String serviceFullName;
     private String servicePackageName;
+    private String serviceImplName;
+    private String serviceImplFullName;
+    private String serviceImplPackageName;
     private String controllerName;
     private String controllerFullName;
     private String controllerPackageName;
@@ -75,6 +78,9 @@ public abstract class AbstractModelInfo<T, F extends ColumnInfo<?, ?>> implement
         this.setServiceName(ModelInfo.super.getServiceName());
         this.setServiceFullName(ModelInfo.super.getServiceFullName());
         this.setServicePackageName(ModelInfo.super.getServicePackageName());
+        this.setServiceImplName(ModelInfo.super.getServiceImplName());
+        this.setServiceImplFullName(ModelInfo.super.getServiceImplFullName());
+        this.setServiceImplPackageName(ModelInfo.super.getServiceImplPackageName());
         this.setControllerName(ModelInfo.super.getControllerName());
         this.setControllerFullName(ModelInfo.super.getControllerFullName());
         this.setControllerPackageName(ModelInfo.super.getControllerPackageName());

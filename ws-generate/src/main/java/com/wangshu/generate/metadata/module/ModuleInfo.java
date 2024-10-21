@@ -50,6 +50,10 @@ public interface ModuleInfo extends Module {
         return StringUtil.concat(this.getModulePackagePath(), "service", File.separator);
     }
 
+    default String getModuleServiceImplPath() {
+        return StringUtil.concat(this.getModulePackagePath(), "service", File.separator, "impl", File.separator);
+    }
+
     default String getModuleControllerPath() {
         return StringUtil.concat(this.getModulePackagePath(), "controller", File.separator);
     }
@@ -88,6 +92,10 @@ public interface ModuleInfo extends Module {
 
     default String getModuleGenerateServicePath() {
         return StringUtil.concat(this.getModuleGeneratePackagePath(), "service", File.separator);
+    }
+
+    default String getModuleGenerateServiceImplPath() {
+        return StringUtil.concat(this.getModuleGeneratePackagePath(), "service", File.separator, "impl", File.separator);
     }
 
     default String getModuleGenerateControllerPath() {

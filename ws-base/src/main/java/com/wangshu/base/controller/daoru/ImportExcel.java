@@ -5,6 +5,7 @@ import com.wangshu.base.mapper.BaseDataMapper;
 import com.wangshu.base.model.BaseModel;
 import com.wangshu.base.result.ResultBody;
 import com.wangshu.base.service.AbstractBaseDataService;
+import com.wangshu.base.service.BaseDataService;
 import com.wangshu.enu.CommonErrorInfo;
 import com.wangshu.exception.IException;
 import com.wangshu.tool.StringUtil;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public interface ImportExcel<S extends AbstractBaseDataService<?, ? extends BaseDataMapper<T>, T>, T extends BaseModel> extends BaseDataController<S, T> {
+public interface ImportExcel<S extends BaseDataService<?, ? extends BaseDataMapper<T>, T>, T extends BaseModel> extends BaseDataController<S, T> {
 
     @RequestMapping("/importExcel")
     @ResponseBody
