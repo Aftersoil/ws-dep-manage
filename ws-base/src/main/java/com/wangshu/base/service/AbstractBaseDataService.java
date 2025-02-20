@@ -82,8 +82,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
         T model;
         try {
             model = this.getModelClazz().getConstructor().newInstance();
-        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                 IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             log.error("获取实体类实例失败,请检查泛型", e);
             throw new IException(CommonErrorInfo.SERVER_ERROR);
         }
@@ -98,7 +97,7 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
             throw new IException(CommonErrorInfo.SERVER_ERROR);
         }
         if (StringUtil.isEmpty(model.modelAnyValueByFieldName(modelPrimaryField.getName())) && modelPrimaryField.getType().equals(String.class)) {
-            model.setModelAnyValueByFieldName(modelPrimaryField.getName(), this.getUUID());
+            model.setModelAnyValueByFieldName(modelPrimaryField.getName(), this.getId());
         }
         if (model.fieldIsExist("createdAt") && Objects.isNull(model.modelAnyValueByFieldName("createdAt"))) {
             model.setModelAnyValueByFieldName("createdAt", new Date());
@@ -528,24 +527,24 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     public Map<String, Object> listParamFilter(@NotNull Map<String, Object> map) {
-        int pageIndex;
+        long pageIndex;
         try {
-            pageIndex = Integer.parseInt(String.valueOf(map.get("pageIndex")));
+            pageIndex = Long.parseLong(String.valueOf(map.get("pageIndex")));
             if (pageIndex <= 0) {
                 pageIndex = 1;
             }
-        } catch (Exception e) {
-            log.warn("不规范的pageIndex参数");
+        } catch (NumberFormatException e) {
+            log.warn("不规范的pageIndex参数,详细参数: {}", map.get("pageIndex"));
             pageIndex = 1;
         }
-        int pageSize;
+        long pageSize;
         try {
-            pageSize = Integer.parseInt(String.valueOf(map.get("pageSize")));
+            pageSize = Long.parseLong(String.valueOf(map.get("pageSize")));
             if (pageSize <= 0) {
                 pageSize = 10;
             }
-        } catch (Exception e) {
-            log.warn("不规范的pageSize参数");
+        } catch (NumberFormatException e) {
+            log.warn("不规范的pageSize参数,详细参数: {}", map.get("pageSize"));
             pageSize = 10;
         }
         map.put("pageIndex", (pageIndex - 1) * pageSize);
@@ -566,7 +565,6 @@ public abstract class AbstractBaseDataService<P, M extends BaseDataMapper<T>, T 
     }
 
     public boolean listValidate(@NotNull Map<String, Object> map) {
-        log.info("查询列表操作参数: {}", JSON.toJSONString(map));
         return true;
     }
 

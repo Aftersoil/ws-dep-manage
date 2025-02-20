@@ -360,18 +360,21 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
             if (!StrUtil.equals(leftSelectFieldNames.getFirst(), "*")) {
                 baseFields = baseFields.stream().filter(item -> leftSelectFieldNames.contains(item.getName())).toList();
             }
-            org.dom4j.Element collectionElement = this.getCollectionElement(field.getName(), leftModel.getModelFullName());
+            org.dom4j.Element element = null;
             if (field.isCollectionJoinField()) {
-                collectionElement.addAttribute("javaType", List.class.getTypeName());
+                element = this.getCollectionElement(field.getName(), leftModel.getModelFullName());
+                element.addAttribute("javaType", List.class.getTypeName());
+            } else {
+                element = this.getAssociationElement(field.getName(), leftModel.getModelFullName());
             }
             for (F baseField : baseFields) {
                 String property = baseField.getName();
                 String column = StringUtil.concat(field.getName(), field.getInfix(), StringUtils.capitalize(property));
                 JdbcType mybatisJdbcType = baseField.getMybatisJdbcType();
                 Element idResultElement = this.getResultMapElement(column, mybatisJdbcType.name(), property, baseField.isPrimaryField());
-                collectionElement.add(idResultElement);
+                element.add(idResultElement);
             }
-            return collectionElement;
+            return element;
         }
     }
 
@@ -394,7 +397,7 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
                 if (!StrUtil.equals(leftSelectFields.getFirst(), "*")) {
                     baseFields = baseFields.stream().filter(item -> leftSelectFields.contains(item.getName())).toList();
                 }
-                baseFields = baseFields.stream().filter(item -> !item.isPrimaryField()).toList();
+//                baseFields = baseFields.stream().filter(item -> !item.isPrimaryField()).toList();
                 for (F baseField : baseFields) {
                     String table = getJoinLeftTableAsName(field);
                     String columnName = baseField.getName();
@@ -612,12 +615,19 @@ public abstract class GenerateXml<T extends ModelInfo<?, F>, F extends ColumnInf
         return collectionElement;
     }
 
+    public org.dom4j.Element getAssociationElement(String property, String javaType) {
+        org.dom4j.Element collectionElement = this.createXmlElement("association");
+        collectionElement.addAttribute("property", property);
+        collectionElement.addAttribute("javaType", javaType);
+        return collectionElement;
+    }
+
     public String getSelectText(String tableName, String columnName) {
         return StringUtil.concat(this.getBackQuoteStr(tableName), ".", this.getBackQuoteStr(columnName));
     }
 
     public String getSelectText(String tableName, String columnName, String columnAsName) {
-        return StringUtil.concat(this.getBackQuoteStr(tableName), ".", this.getBackQuoteStr(columnName), " as ", columnAsName);
+        return StringUtil.concat(this.getBackQuoteStr(tableName), ".", this.getBackQuoteStr(columnName), " as ", this.getBackQuoteStr(columnAsName));
     }
 
     public org.dom4j.Element getIfNotNullElement(String testName) {

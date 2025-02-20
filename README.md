@@ -35,20 +35,20 @@
 <dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-base</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
 </dependency>
 
 <!--可选-->
 <dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-spring-boot-starter</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
 </dependency>
 
 <!--可选-->
 <dependency>
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-generate</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
 </dependency>
 ```

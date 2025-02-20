@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.3.1</version>
+        <version>3.3.4</version>
         <relativePath/>
     </parent>
 
     <groupId>io.github.wangshu-g</groupId>
     <artifactId>ws-dep-manage</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.5</version>
 
     <packaging>pom</packaging>
 
@@ -21,6 +21,7 @@
         <module>ws-base</module>
         <module>ws-spring-boot-starter</module>
         <module>ws-generate</module>
+        <module>ws-generate-compile-time</module>
     </modules>
 
     <url>https://github.com/wangshu-g/ws-dep-manage</url>
@@ -50,9 +51,9 @@
 
     <properties>
         <java.version>21</java.version>
-        <kotlin.version>1.9.24</kotlin.version>
+        <kotlin.version>1.9.25</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-framework.version>6.1.5</spring-framework.version>
+        <spring-framework-bom.version>6.1.14</spring-framework-bom.version>
         <mybatis.version>3.5.14</mybatis.version>
         <mybatis-starter.version>3.0.3</mybatis-starter.version>
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
@@ -61,7 +62,17 @@
     </properties>
 
     <dependencyManagement>
+
         <dependencies>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring-framework-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
@@ -85,27 +96,24 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+
         </dependencies>
+
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test</artifactId>
+            <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+
     </dependencies>
 
     <build>
@@ -135,9 +143,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <jvmTarget>1.8</jvmTarget>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

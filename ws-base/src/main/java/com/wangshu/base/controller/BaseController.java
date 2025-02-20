@@ -16,7 +16,7 @@ public interface BaseController {
         return RequestUtil.getRequestParams(request);
     }
 
-    default String getUUID() {
+    default String getId() {
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 

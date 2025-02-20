@@ -1,7 +1,7 @@
 package com.wangshu.enu
 
 enum class DataBaseType {
-    oracle, sqlServer, mysql;
+    oracle, sqlServer, mysql, postgres;
 
     companion object {
         @JvmStatic
